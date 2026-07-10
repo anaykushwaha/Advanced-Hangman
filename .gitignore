@@ -1,0 +1,57 @@
+# Python
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs
+
+.vscode/
+.idea/
+
+# Operating System
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python Packaging
+
+build/
+dist/
+*.egg-info/
+
+# Testing
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type Checkers
+
+.mypy_cache/
+
+# Logs
+
+*.log
+
+# Save Files
+
+data/saves/savegame.json
+
+# Statistics
+
+data/statistics.json
+
+# Misc
+
+*.tmp
+*.bak
+*.swp
