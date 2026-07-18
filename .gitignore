@@ -1,57 +1,100 @@
-# Python
+# Advanced Hangman
+# .gitignore
+
+
+# Python bytecode
 
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual Environments
+# Compiled extensions
 
-venv/
+*.so
+*.pyd
+*.dll
+
+# Virtual environments
+
 .venv/
+venv/
 env/
 ENV/
 
-# IDEs
+# Distribution / Packaging
+
+build/
+dist/
+downloads/
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+share/python-wheels/
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+
+# Installer logs
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit testing / Coverage
+
+.coverage
+.coverage.*
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+
+# Type checking
+
+.mypy_cache/
+.pyre/
+.pytype/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# IDE Settings
 
 .vscode/
 .idea/
 
-# Operating System
+# Operating System Files
 
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Python Packaging
-
-build/
-dist/
-*.egg-info/
-
-# Testing
-
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Type Checkers
-
-.mypy_cache/
-
 # Logs
 
 *.log
 
-# Save Files
-
-data/saves/savegame.json
-
-# Statistics
+# Runtime Data
 
 data/statistics.json
+data/saves/savegame.json
 
-# Misc
+# Environment Variables
+
+.env
+.env.*
+
+# Temporary Files
 
 *.tmp
-*.bak
-*.swp
+*.temp
+
+# Python Version
+
+.python-version 
