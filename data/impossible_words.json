@@ -1,0 +1,206 @@
+[
+    {
+        "word": "THEORY OF RELATIVITY",
+        "category": "Physics"
+    },
+    {
+        "word": "QUANTUM MECHANICS",
+        "category": "Physics"
+    },
+    {
+        "word": "ELECTROMAGNETIC INDUCTION",
+        "category": "Physics"
+    },
+    {
+        "word": "SCHRODINGER EQUATION",
+        "category": "Physics"
+    },
+    {
+        "word": "HEISENBERG UNCERTAINTY PRINCIPLE",
+        "category": "Physics"
+    },
+    {
+        "word": "SPECIAL RELATIVITY",
+        "category": "Physics"
+    },
+    {
+        "word": "GENERAL RELATIVITY",
+        "category": "Physics"
+    },
+    {
+        "word": "PHOTOELECTRIC EFFECT",
+        "category": "Physics"
+    },
+    {
+        "word": "WAVE PARTICLE DUALITY",
+        "category": "Physics"
+    },
+    {
+        "word": "STANDARD MODEL OF PARTICLE PHYSICS",
+        "category": "Physics"
+    },
+
+    {
+        "word": "OBJECT ORIENTED PROGRAMMING",
+        "category": "Computer Science"
+    },
+    {
+        "word": "ARTIFICIAL INTELLIGENCE",
+        "category": "Computer Science"
+    },
+    {
+        "word": "MACHINE LEARNING",
+        "category": "Computer Science"
+    },
+    {
+        "word": "OPERATING SYSTEM",
+        "category": "Computer Science"
+    },
+    {
+        "word": "DISTRIBUTED COMPUTING",
+        "category": "Computer Science"
+    },
+    {
+        "word": "COMPUTATIONAL COMPLEXITY",
+        "category": "Computer Science"
+    },
+    {
+        "word": "DYNAMIC PROGRAMMING",
+        "category": "Computer Science"
+    },
+    {
+        "word": "GRAPH THEORY",
+        "category": "Computer Science"
+    },
+    {
+        "word": "BREADTH FIRST SEARCH",
+        "category": "Computer Science"
+    },
+    {
+        "word": "DEPTH FIRST SEARCH",
+        "category": "Computer Science"
+    },
+
+    {
+        "word": "FRENCH REVOLUTION",
+        "category": "History"
+    },
+    {
+        "word": "INDUSTRIAL REVOLUTION",
+        "category": "History"
+    },
+    {
+        "word": "AMERICAN REVOLUTION",
+        "category": "History"
+    },
+    {
+        "word": "FALL OF THE BERLIN WALL",
+        "category": "History"
+    },
+    {
+        "word": "MAGNA CARTA",
+        "category": "History"
+    },
+    {
+        "word": "RENAISSANCE PERIOD",
+        "category": "History"
+    },
+    {
+        "word": "COLD WAR",
+        "category": "History"
+    },
+    {
+        "word": "APOLLO ELEVEN",
+        "category": "History"
+    },
+    {
+        "word": "NORMANDY LANDINGS",
+        "category": "History"
+    },
+    {
+        "word": "DECLARATION OF INDEPENDENCE",
+        "category": "History"
+    },
+
+    {
+        "word": "PYTHAGOREAN THEOREM",
+        "category": "Mathematics"
+    },
+    {
+        "word": "FUNDAMENTAL THEOREM OF CALCULUS",
+        "category": "Mathematics"
+    },
+    {
+        "word": "DIFFERENTIAL EQUATIONS",
+        "category": "Mathematics"
+    },
+    {
+        "word": "LINEAR ALGEBRA",
+        "category": "Mathematics"
+    },
+    {
+        "word": "COMPLEX NUMBERS",
+        "category": "Mathematics"
+    },
+    {
+        "word": "BINOMIAL DISTRIBUTION",
+        "category": "Mathematics"
+    },
+    {
+        "word": "MULTIVARIABLE CALCULUS",
+        "category": "Mathematics"
+    },
+    {
+        "word": "GAUSSIAN ELIMINATION",
+        "category": "Mathematics"
+    },
+    {
+        "word": "MATRIX MULTIPLICATION",
+        "category": "Mathematics"
+    },
+    {
+        "word": "TAYLOR SERIES",
+        "category": "Mathematics"
+    },
+
+    {
+        "word": "GREAT WALL OF CHINA",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "STATUE OF LIBERTY",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "MACHU PICCHU",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "TAJ MAHAL",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "CHICHEN ITZA",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "PETRA",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "SYDNEY OPERA HOUSE",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "EIFFEL TOWER",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "GOLDEN GATE BRIDGE",
+        "category": "World Landmarks"
+    },
+    {
+        "word": "CHRIST THE REDEEMER",
+        "category": "World Landmarks"
+    }
+]
