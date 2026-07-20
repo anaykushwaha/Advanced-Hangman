@@ -2,26 +2,49 @@
 # .gitignore
 
 
-# Python bytecode
+# Python Bytecode
 
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Compiled extensions
-
-*.so
-*.pyd
-*.dll
-
-# Virtual environments
+# Virtual Environments 
 
 .venv/
 venv/
 env/
 ENV/
 
-# Distribution / Packaging
+# IDE / Editor Settings
+
+.vscode/
+.idea/
+
+# Visual Studio
+.vs/
+
+# Operating System Files
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python Tooling & Test Cache
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.tox/
+.nox/
+
+# Coverage Reports
+
+.coverage
+.coverage.*
+htmlcov/
+
+# Build & Distribution
 
 build/
 dist/
@@ -33,68 +56,39 @@ lib/
 lib64/
 parts/
 sdist/
-share/python-wheels/
-pip-wheel-metadata/
+wheels/
+
 *.egg-info/
 *.egg
+pip-wheel-metadata/
 
-# Installer logs
+# Installer Logs
 
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit testing / Coverage
-
-.coverage
-.coverage.*
-.pytest_cache/
-.tox/
-.nox/
-htmlcov/
-coverage.xml
-*.cover
-*.py,cover
-
-# Type checking
-
-.mypy_cache/
-.pyre/
-.pytype/
-
-# Jupyter
-
-.ipynb_checkpoints/
-
-# IDE Settings
-
-.vscode/
-.idea/
-
-# Operating System Files
-
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Logs
+# Log Files
 
 *.log
 
-# Runtime Data
+# Jupyter Notebook
 
-data/statistics.json
-data/saves/savegame.json
+.ipynb_checkpoints/
+
+# PyInstaller
+
+*.manifest
+*.spec
 
 # Environment Variables
 
 .env
 .env.*
 
-# Temporary Files
+# Local Save Data (Optional)
 
-*.tmp
-*.temp
+# Uncomment the following line if you want your
+# personal save progress to remain local and not
+# be committed to Git.
 
-# Python Version
-
-.python-version 
+# data/saves/savegame.json 
