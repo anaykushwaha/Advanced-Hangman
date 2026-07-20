@@ -1,0 +1,202 @@
+[
+    {
+        "word": "APPLE",
+        "category": "Food"
+    },
+    {
+        "word": "BANANA",
+        "category": "Food"
+    },
+    {
+        "word": "BREAD",
+        "category": "Food"
+    },
+    {
+        "word": "PIZZA",
+        "category": "Food"
+    },
+    {
+        "word": "BURGER",
+        "category": "Food"
+    },
+    {
+        "word": "CHEESE",
+        "category": "Food"
+    },
+    {
+        "word": "ORANGE",
+        "category": "Food"
+    },
+    {
+        "word": "COOKIE",
+        "category": "Food"
+    },
+    {
+        "word": "DONUT",
+        "category": "Food"
+    },
+    {
+        "word": "CARROT",
+        "category": "Food"
+    },
+    {
+        "word": "DOG",
+        "category": "Animals"
+    },
+    {
+        "word": "CAT",
+        "category": "Animals"
+    },
+    {
+        "word": "HORSE",
+        "category": "Animals"
+    },
+    {
+        "word": "SHEEP",
+        "category": "Animals"
+    },
+    {
+        "word": "GOAT",
+        "category": "Animals"
+    },
+    {
+        "word": "TIGER",
+        "category": "Animals"
+    },
+    {
+        "word": "LION",
+        "category": "Animals"
+    },
+    {
+        "word": "RABBIT",
+        "category": "Animals"
+    },
+    {
+        "word": "MONKEY",
+        "category": "Animals"
+    },
+    {
+        "word": "PANDA",
+        "category": "Animals"
+    },
+    {
+        "word": "CHAIR",
+        "category": "Household"
+    },
+    {
+        "word": "TABLE",
+        "category": "Household"
+    },
+    {
+        "word": "WINDOW",
+        "category": "Household"
+    },
+    {
+        "word": "DOOR",
+        "category": "Household"
+    },
+    {
+        "word": "PILLOW",
+        "category": "Household"
+    },
+    {
+        "word": "BLANKET",
+        "category": "Household"
+    },
+    {
+        "word": "MIRROR",
+        "category": "Household"
+    },
+    {
+        "word": "LAMP",
+        "category": "Household"
+    },
+    {
+        "word": "SOFA",
+        "category": "Household"
+    },
+    {
+        "word": "CLOCK",
+        "category": "Household"
+    },
+    {
+        "word": "RED",
+        "category": "Colors"
+    },
+    {
+        "word": "BLUE",
+        "category": "Colors"
+    },
+    {
+        "word": "GREEN",
+        "category": "Colors"
+    },
+    {
+        "word": "BLACK",
+        "category": "Colors"
+    },
+    {
+        "word": "WHITE",
+        "category": "Colors"
+    },
+    {
+        "word": "YELLOW",
+        "category": "Colors"
+    },
+    {
+        "word": "PURPLE",
+        "category": "Colors"
+    },
+    {
+        "word": "PINK",
+        "category": "Colors"
+    },
+    {
+        "word": "BROWN",
+        "category": "Colors"
+    },
+    {
+        "word": "ORANGE",
+        "category": "Colors"
+    },
+    {
+        "word": "TRAIN",
+        "category": "Transport"
+    },
+    {
+        "word": "CAR",
+        "category": "Transport"
+    },
+    {
+        "word": "BUS",
+        "category": "Transport"
+    },
+    {
+        "word": "TRUCK",
+        "category": "Transport"
+    },
+    {
+        "word": "BICYCLE",
+        "category": "Transport"
+    },
+    {
+        "word": "BOAT",
+        "category": "Transport"
+    },
+    {
+        "word": "SHIP",
+        "category": "Transport"
+    },
+    {
+        "word": "PLANE",
+        "category": "Transport"
+    },
+    {
+        "word": "SUBWAY",
+        "category": "Transport"
+    },
+    {
+        "word": "SCOOTER",
+        "category": "Transport"
+    }
+]

@@ -1,0 +1,206 @@
+[
+    {
+        "word": "ELEPHANT",
+        "category": "Animals"
+    },
+    {
+        "word": "KANGAROO",
+        "category": "Animals"
+    },
+    {
+        "word": "CROCODILE",
+        "category": "Animals"
+    },
+    {
+        "word": "DOLPHIN",
+        "category": "Animals"
+    },
+    {
+        "word": "OCTOPUS",
+        "category": "Animals"
+    },
+    {
+        "word": "BUTTERFLY",
+        "category": "Animals"
+    },
+    {
+        "word": "CHAMELEON",
+        "category": "Animals"
+    },
+    {
+        "word": "RHINOCEROS",
+        "category": "Animals"
+    },
+    {
+        "word": "HIPPOPOTAMUS",
+        "category": "Animals"
+    },
+    {
+        "word": "WOODPECKER",
+        "category": "Animals"
+    },
+
+    {
+        "word": "VOLCANO",
+        "category": "Nature"
+    },
+    {
+        "word": "WATERFALL",
+        "category": "Nature"
+    },
+    {
+        "word": "HURRICANE",
+        "category": "Nature"
+    },
+    {
+        "word": "LIGHTNING",
+        "category": "Nature"
+    },
+    {
+        "word": "RAINBOW",
+        "category": "Nature"
+    },
+    {
+        "word": "GLACIER",
+        "category": "Nature"
+    },
+    {
+        "word": "DESERT",
+        "category": "Nature"
+    },
+    {
+        "word": "FOREST",
+        "category": "Nature"
+    },
+    {
+        "word": "MOUNTAIN",
+        "category": "Nature"
+    },
+    {
+        "word": "AVALANCHE",
+        "category": "Nature"
+    },
+
+    {
+        "word": "NOTEBOOK",
+        "category": "School"
+    },
+    {
+        "word": "BACKPACK",
+        "category": "School"
+    },
+    {
+        "word": "BLACKBOARD",
+        "category": "School"
+    },
+    {
+        "word": "MATHEMATICS",
+        "category": "School"
+    },
+    {
+        "word": "CHEMISTRY",
+        "category": "School"
+    },
+    {
+        "word": "GEOGRAPHY",
+        "category": "School"
+    },
+    {
+        "word": "HOMEWORK",
+        "category": "School"
+    },
+    {
+        "word": "CLASSROOM",
+        "category": "School"
+    },
+    {
+        "word": "PROJECT",
+        "category": "School"
+    },
+    {
+        "word": "SCIENTIST",
+        "category": "School"
+    },
+
+    {
+        "word": "ICE CREAM",
+        "category": "Food"
+    },
+    {
+        "word": "FRIED RICE",
+        "category": "Food"
+    },
+    {
+        "word": "PANCAKES",
+        "category": "Food"
+    },
+    {
+        "word": "SPAGHETTI",
+        "category": "Food"
+    },
+    {
+        "word": "LASAGNA",
+        "category": "Food"
+    },
+    {
+        "word": "CHOCOLATE",
+        "category": "Food"
+    },
+    {
+        "word": "STRAWBERRY",
+        "category": "Food"
+    },
+    {
+        "word": "BLUEBERRY",
+        "category": "Food"
+    },
+    {
+        "word": "SANDWICH",
+        "category": "Food"
+    },
+    {
+        "word": "MILKSHAKE",
+        "category": "Food"
+    },
+
+    {
+        "word": "FIRE TRUCK",
+        "category": "Transport"
+    },
+    {
+        "word": "MOTORCYCLE",
+        "category": "Transport"
+    },
+    {
+        "word": "HELICOPTER",
+        "category": "Transport"
+    },
+    {
+        "word": "AMBULANCE",
+        "category": "Transport"
+    },
+    {
+        "word": "SPACE SHUTTLE",
+        "category": "Transport"
+    },
+    {
+        "word": "ROLLER COASTER",
+        "category": "Transport"
+    },
+    {
+        "word": "AIRCRAFT",
+        "category": "Transport"
+    },
+    {
+        "word": "SUBMARINE",
+        "category": "Transport"
+    },
+    {
+        "word": "HIGH SPEED TRAIN",
+        "category": "Transport"
+    },
+    {
+        "word": "HOT AIR BALLOON",
+        "category": "Transport"
+    }
+]
