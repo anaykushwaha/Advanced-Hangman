@@ -1,0 +1,10 @@
+# ==================================================
+# Advanced Hangman
+# Requirements
+# ==================================================
+
+# This project uses only Python's Standard Library.
+# No external packages are required.
+
+# Minimum Python Version
+python>=3.10 
