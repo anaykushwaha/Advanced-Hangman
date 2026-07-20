@@ -1,0 +1,206 @@
+[
+    {
+        "word": "ALBERT EINSTEIN",
+        "category": "Scientists"
+    },
+    {
+        "word": "ISAAC NEWTON",
+        "category": "Scientists"
+    },
+    {
+        "word": "MARIE CURIE",
+        "category": "Scientists"
+    },
+    {
+        "word": "NIKOLA TESLA",
+        "category": "Scientists"
+    },
+    {
+        "word": "GALILEO GALILEI",
+        "category": "Scientists"
+    },
+    {
+        "word": "STEPHEN HAWKING",
+        "category": "Scientists"
+    },
+    {
+        "word": "CHARLES DARWIN",
+        "category": "Scientists"
+    },
+    {
+        "word": "LOUIS PASTEUR",
+        "category": "Scientists"
+    },
+    {
+        "word": "MICHAEL FARADAY",
+        "category": "Scientists"
+    },
+    {
+        "word": "DMITRI MENDELEEV",
+        "category": "Scientists"
+    },
+
+    {
+        "word": "MILKY WAY GALAXY",
+        "category": "Astronomy"
+    },
+    {
+        "word": "BLACK HOLE",
+        "category": "Astronomy"
+    },
+    {
+        "word": "NEUTRON STAR",
+        "category": "Astronomy"
+    },
+    {
+        "word": "WHITE DWARF",
+        "category": "Astronomy"
+    },
+    {
+        "word": "EVENT HORIZON",
+        "category": "Astronomy"
+    },
+    {
+        "word": "SOLAR ECLIPSE",
+        "category": "Astronomy"
+    },
+    {
+        "word": "LUNAR ECLIPSE",
+        "category": "Astronomy"
+    },
+    {
+        "word": "ASTEROID BELT",
+        "category": "Astronomy"
+    },
+    {
+        "word": "ANDROMEDA GALAXY",
+        "category": "Astronomy"
+    },
+    {
+        "word": "SUPERNOVA",
+        "category": "Astronomy"
+    },
+
+    {
+        "word": "MOUNT EVEREST",
+        "category": "Geography"
+    },
+    {
+        "word": "SAHARA DESERT",
+        "category": "Geography"
+    },
+    {
+        "word": "AMAZON RAINFOREST",
+        "category": "Geography"
+    },
+    {
+        "word": "GREAT BARRIER REEF",
+        "category": "Geography"
+    },
+    {
+        "word": "GRAND CANYON",
+        "category": "Geography"
+    },
+    {
+        "word": "NIAGARA FALLS",
+        "category": "Geography"
+    },
+    {
+        "word": "MARIANA TRENCH",
+        "category": "Geography"
+    },
+    {
+        "word": "PACIFIC OCEAN",
+        "category": "Geography"
+    },
+    {
+        "word": "ANTARCTICA",
+        "category": "Geography"
+    },
+    {
+        "word": "HIMALAYAN MOUNTAINS",
+        "category": "Geography"
+    },
+
+    {
+        "word": "PYTHON PROGRAMMING",
+        "category": "Programming"
+    },
+    {
+        "word": "OBJECT ORIENTED PROGRAMMING",
+        "category": "Programming"
+    },
+    {
+        "word": "BINARY SEARCH",
+        "category": "Programming"
+    },
+    {
+        "word": "MERGE SORT",
+        "category": "Programming"
+    },
+    {
+        "word": "RECURSION",
+        "category": "Programming"
+    },
+    {
+        "word": "LINKED LIST",
+        "category": "Programming"
+    },
+    {
+        "word": "HASH TABLE",
+        "category": "Programming"
+    },
+    {
+        "word": "BINARY TREE",
+        "category": "Programming"
+    },
+    {
+        "word": "DEPTH FIRST SEARCH",
+        "category": "Programming"
+    },
+    {
+        "word": "DYNAMIC PROGRAMMING",
+        "category": "Programming"
+    },
+
+    {
+        "word": "GREEK MYTHOLOGY",
+        "category": "Mythology"
+    },
+    {
+        "word": "NORSE MYTHOLOGY",
+        "category": "Mythology"
+    },
+    {
+        "word": "MINOTAUR",
+        "category": "Mythology"
+    },
+    {
+        "word": "MEDUSA",
+        "category": "Mythology"
+    },
+    {
+        "word": "PEGASUS",
+        "category": "Mythology"
+    },
+    {
+        "word": "CERBERUS",
+        "category": "Mythology"
+    },
+    {
+        "word": "PHOENIX",
+        "category": "Mythology"
+    },
+    {
+        "word": "HYDRA",
+        "category": "Mythology"
+    },
+    {
+        "word": "ODIN",
+        "category": "Mythology"
+    },
+    {
+        "word": "THOR",
+        "category": "Mythology"
+    }
+]
