@@ -1,0 +1,17 @@
+{
+    "games_played": 0,
+    "games_won": 0,
+    "games_lost": 0,
+    "total_guesses": 0,
+    "correct_guesses": 0,
+    "wrong_guesses": 0,
+    "total_play_time": 0,
+    "best_score": 0,
+    "highest_win_streak": 0,
+    "current_win_streak": 0,
+    "average_accuracy": 0.0,
+    "average_game_time": 0.0,
+    "favorite_difficulty": "None",
+    "favorite_game_mode": "None",
+    "last_played": null
+}
