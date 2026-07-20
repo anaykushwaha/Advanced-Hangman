@@ -1,0 +1,16 @@
+{
+    "player_name": "",
+    "difficulty": "",
+    "game_mode": "",
+    "selected_word": "",
+    "category": "",
+    "display_word": [],
+    "correct_letters": [],
+    "wrong_letters": [],
+    "remaining_lives": 0,
+    "game_running": false,
+    "game_won": false,
+    "game_over": false,
+    "elapsed_time": 0,
+    "timestamp": null
+}
