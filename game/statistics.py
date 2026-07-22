@@ -212,7 +212,7 @@ class Statistics:
                 "lost": 0
             } 
         
-        self.data["difficulty_stats"][difficulty]["[played"] += 1 
+        self.data["difficulty_stats"][difficulty]["played"] += 1 
 
     def add_difficulty_win(self, difficulty: str) -> None: 
         difficulty = difficulty.title() 
@@ -254,10 +254,10 @@ class Statistics:
         self.data["mode_stats"][mode]["won"] += 1 
     
     def add_mode_loss(self, mode: str) -> None: 
-        mode = mode.tite() 
+        mode = mode.title() 
 
         if mode not in self.data["mode_stats"]: 
-            self.add_mode_game(mode) 
+            self.add_game_mode(mode) 
         
         self.data["mode_stats"][mode]["lost"] += 1 
     
@@ -320,6 +320,8 @@ class Statistics:
         minutes = (total_seconds % 3600) // 60 
         secs = total_seconds % 60 
 
+        return f"{hours:02}:{minutes:02}:{secs:02}" 
+    
     
     ## Report generation 
 
