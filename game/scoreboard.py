@@ -138,7 +138,7 @@ class ScoreBoard:
     ## Formatting 
 
     @staticmethod 
-    def format(score: int) -> int: 
+    def format(score: int) -> str: 
         # Returns a formatted score 
         # E.g. 15420 becomes 15,420 
 
@@ -158,12 +158,12 @@ class ScoreBoard:
 
         print (
             f"Difficulty Multipler: " 
-            f"x{ScoreBoard.multipler()}" 
+            f"x{ScoreBoard.multiplier()}" 
         ) 
 
         print (
             f"Correct guess        : " 
-            f"{ScoreBoard.correct_guess()}" 
+            f"{ScoreBoard.correct_guess(player)}" 
         ) 
 
         print (
@@ -188,7 +188,7 @@ class ScoreBoard:
 
         print (
             f"Win bonus            : " 
-            f"{ScoreBoard.game_won(Player)}" 
+            f"{ScoreBoard.game_won(player)}" 
         ) 
 
         print ("=" * 50) 
