@@ -64,15 +64,15 @@ class WordManager:
             EASY_WORDS_FILE, 
             "Easy" 
         ) 
-        self.words["Medium"] = self._load_file(
+        self.words["Medium"] = self.load_file(
             MEDIUM_WORDS_FILE, 
             "Medium" 
         ) 
-        self.words["Hard"] = self._load_file(
+        self.words["Hard"] = self.load_file(
             HARD_WORDS_FILE, 
             "Hard" 
         ) 
-        self.words["Impossible"] = self._load_file(
+        self.words["Impossible"] = self.load_file(
             IMPOSSIBLE_WORDS_FILE, 
             "Impossible" 
         ) 
@@ -82,7 +82,7 @@ class WordManager:
 
         path = Path(filename) 
         
-        if not FileManager.exist(path): 
+        if not FileManager.exists(path): 
             return [] 
         
         raw = FileManager.load_json(path) 
@@ -108,8 +108,8 @@ class WordManager:
                 .get_settings() 
                 .name 
             ) 
-        
-        pool = self.words[difficulty] 
+
+        pool = self.words.get(difficulty, []) 
 
         if not pool: 
             raise ValueError(
@@ -148,7 +148,7 @@ class WordManager:
     def difficulties(self) -> List[str]: 
         # Returns available difficulties 
 
-        return list(self.words.key()) 
+        return list(self.words.keys()) 
     
     def categories(self, difficulty: str) -> List[str]: 
         # Returns categories for one difficulty 
@@ -163,11 +163,11 @@ class WordManager:
     def random_category_word(self, difficulty: str, category: str) -> Word: 
         # Returns a random word from a category 
 
-        candidates = {
+        candidates = [
             word 
             for word in self.words[difficulty] 
             if word.category.lower() == category.lower() 
-        } 
+        ] 
 
         if not candidates: 
             raise ValueError(
@@ -175,7 +175,8 @@ class WordManager:
             ) 
         
         self.current_word = random.choice(candidates) 
-    
+        return self.current_word 
+
     def exists(self, word: str) -> bool: 
         # Returns True if the supplied word exists in any difficulty 
 
@@ -199,11 +200,13 @@ class WordManager:
                 pool.extend(words) 
 
         else: 
-            return [
-                word 
-                for word in pool 
-                if word.length == length 
-            ] 
+            pool = self.words[difficulty]
+        
+        return [
+            word 
+            for word in pool 
+            if word.length == length 
+        ] 
         
     def phrases(self, difficulty: str | None = None) -> List[Word]: 
         # Returns every phrase (multiple words) 
@@ -229,16 +232,18 @@ class WordManager:
             for words in self.words.values(): 
                 pool.extend(words) 
         else: 
-            return [
-                word 
-                for word in pool 
-                if word.word_count == 1 
-            ] 
+            pool = self.words[difficulty] 
+        
+        return [
+            word 
+            for word in pool 
+            if word.word_count == 1 
+        ] 
     
     def longest_word(self, difficulty: str | None = None) -> Word: 
         if difficulty is None: 
             pool = [] 
-            for word in self.words.values(): 
+            for words in self.words.values(): 
                 pool.extend(words) 
         else: 
             pool = self.words[difficulty] 
@@ -251,10 +256,10 @@ class WordManager:
     def shortest_word(self, difficulty: str | None = None) -> Word: 
         if difficulty is None: 
             pool = [] 
-            for word in self.words.values(): 
+            for words in self.words.values(): 
                 pool.extend(words) 
         else: 
-            pool = self.words[self.difficulty] 
+            pool = self.words[difficulty] 
         
         return min(
             pool, 
@@ -378,7 +383,7 @@ class WordManager:
         categories = set() 
 
         for word in self.words.values(): 
-            for word in words: 
+            for words in words: 
                 categories.add(word.category) 
         
         return len(categories) 
