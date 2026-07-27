@@ -118,7 +118,37 @@ class WordManager:
         
         self.current_word = random.choice(pool) 
         return self.current_word 
-    
+
+    def get_random_word(self, difficulty) -> tuple[str, str]: 
+        # Returns (word, category) for the Engine 
+
+        word = self.random_word(difficulty.name.title()) 
+        return word.text, word.category 
+
+
+    def create_display_word(
+        self,
+        word: str,
+        guessed_letters: set[str] | None = None,
+    ) -> str:
+        # Creates the displayed version of the word
+
+        if guessed_letters is None:
+            guessed_letters = set()
+
+        output = []
+
+        for character in word:
+            if character == " ":
+                output.append(" ")
+            elif character in guessed_letters:
+                output.append(character)
+            else:
+                output.append("_")
+
+        return " ".join(output)
+
+        
     def current(self) -> Word: 
         # Returns the active word 
 
@@ -340,13 +370,9 @@ class WordManager:
     
     def clear_custom(self, difficulty: str) -> None: 
         # Removes every custom word for a difficulty 
-        # Resevred for future expansion as of right now 
+        # Reserved for future expansion as of right now 
 
-        self.words[difficulty] = [
-            word 
-            for word in self.words[difficulty] 
-        ] 
-    
+        pass 
 
     ## Statistics 
 
@@ -382,8 +408,8 @@ class WordManager:
 
         categories = set() 
 
-        for word in self.words.values(): 
-            for words in words: 
+        for pool in self.words.values(): 
+            for word in pool: 
                 categories.add(word.category) 
         
         return len(categories) 
