@@ -21,11 +21,13 @@ class SaveSystem:
 
         return FileManager.exists(self.file_path) 
     
-    def delete(self) -> None: 
+    def delete(self) -> bool: 
         # Deletes the save file 
 
         if self.exists(): 
             self.file_path.unlink() 
+            return True 
+        return False 
 
     def create_empty_save(self) -> None: 
         # Creates a blank save file 
@@ -77,7 +79,7 @@ class SaveSystem:
             remaining_lives: int, 
             score: int, 
             current_streak: int, 
-            elapsed_time: float, 
+            elapsed_time: int, 
             hint_used: bool, 
             game_over: bool, 
             victory: bool, 
@@ -265,6 +267,22 @@ class SaveSystem:
         # Reloads and returns the save data 
 
         return self.load() 
+
+    def save_game(self, data: dict[str, Any]) -> bool: 
+            self.from_dict(data) 
+            return True 
+    
+    def load_game(self) -> dict[str, Any]: 
+        return self.load() 
+    
+    def delete_save(self) -> bool: 
+        if self.exists(): 
+            self.delete() 
+            return True 
+        return False 
+    
+    def save_exists(self) -> bool: 
+        return self.exists()     
     
     def __str__(self) -> str: 
         # Returns a short summary of the current save 
@@ -281,5 +299,5 @@ class SaveSystem:
         ) 
     
     def __repr__(self) -> str: 
-        return self.__Str__() 
+        return self.__str__() 
 
