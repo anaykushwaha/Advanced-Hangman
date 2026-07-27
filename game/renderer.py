@@ -117,7 +117,7 @@ class Renderer:
 
         self.centered(text, color) 
     
-    def succes(self, text: str) -> None: 
+    def success(self, text: str) -> None: 
         self.message(text, Colors.GREEN) 
     
     def warning(self, text: str) -> None: 
@@ -248,7 +248,7 @@ class Renderer:
             f"{guesses}" 
         ) 
     
-    def promot_guess(self) -> str: 
+    def prompt_guess(self) -> str: 
         # Prompts the player for a letter 
 
         return input (
@@ -269,7 +269,7 @@ class Renderer:
 
     ## Complete game screen rendering 
 
-    def draw_status_game(
+    def draw_status_panel(
             self, 
             *, 
             player: str, 
@@ -290,7 +290,7 @@ class Renderer:
         self.draw_timer(elapsed_time) 
         self.separator() 
     
-    def draw_letter_game(
+    def draw_letter_panels(
             self, 
             correct: list[str], 
             wrong: list[str] 
@@ -417,7 +417,7 @@ class Renderer:
         print (f"Streak : {streak}") 
         self.blank_line() 
     
-    def draw_confirmation(self, message: str) -> None: 
+    def draw_confirmation(self, message: str) -> bool: 
         # Displays a confirmation prompt 
         # Returns True for yes 
 
@@ -520,7 +520,7 @@ class Renderer:
 
     ## End game screens 
 
-    def draw_victory_menu(
+    def draw_victory_screen(
             self, 
             *, 
             player: str, 
@@ -766,7 +766,7 @@ class Renderer:
 
         self.blank_line() 
     
-    def __str__(self) -> None: 
+    def __str__(self) -> str: 
         # Returns a summary of the renderer 
 
         return (
@@ -774,7 +774,7 @@ class Renderer:
             f"width={self.width})" 
         ) 
     
-    def __repr__(self) -> None: 
+    def __repr__(self) -> str: 
         # Official representation 
         return self.__str__() 
 
