@@ -11,7 +11,7 @@ from typing import Dict
 
 class Difficulty(Enum): 
     EASY = "Easy" 
-    MEDIUM = " Medium" 
+    MEDIUM = "Medium" 
     HARD = "Hard" 
     IMPOSSIBLE = "Impossible" 
 
@@ -116,13 +116,13 @@ class DifficultyManager:
     
 
     @classmethod 
-    def get_all(cls): 
+    def get_all(cls) -> list[DifficultySettings]: 
         # Returns all difficulties 
 
         return list(cls._DIFFICULTIES.values()) 
     
     @classmethod 
-    def get_names(cls): 
+    def get_names(cls) -> list[str]: 
         # Returns a list of difficulty names 
 
         return [
