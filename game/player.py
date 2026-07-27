@@ -31,17 +31,27 @@ class Player:
     correct_guesses: int = 0 
     wrong_guesses: int = 0 
 
+    ## Game history 
+    games_played: int = 0 
+    games_won: int = 0 
+    games_lost: int = 0 
+
+    ## Streaks 
+    current_streak: int = 0 
+    longest_streak: int = 0 
+
+    ## Hints 
+    hints_used: int = 0 
+
     ## State 
     won: bool = False 
     lost: bool = False 
-
 
 
     ### Methods 
 
     def reset(self) -> None: 
         # resets the player 
-
 
         self.score = 0 
 
@@ -57,12 +67,9 @@ class Player:
         self.hints_used = 0 
 
         self.current_streak = 0 
-        self.longest_streak = 0 
 
         self.won = False 
         self.lost = False 
-
-    
 
     def add_correct_guess(self, letter:str) -> None: 
         # records a correct guess 
@@ -92,7 +99,7 @@ class Player:
         if letter in self.wrong_letters: 
             return 
         
-        self.wrong_letters.append(letter) 
+        self.wrong_letters.add(letter) 
 
         self.total_guesses += 1 
         self.wrong_guesses += 1 
@@ -125,6 +132,9 @@ class Player:
 
         self.won = True 
         self.lost = False 
+
+        games_played += 1 
+        games_won += 1 
     
     def mark_loss(self) -> None: 
         # marks the current game as lost 
@@ -132,7 +142,10 @@ class Player:
         self.won = False 
         self.lost = True 
 
-    def has_guessed(self, letter: str) -> None: 
+        games_played += 1 
+        games_lost += 1 
+
+    def has_guessed(self, letter: str) -> bool: 
         # returns True if the player has already guessed the letter 
 
         letter = letter.upper() 
@@ -167,7 +180,6 @@ class Player:
         # number of incorrect guesses the player can still make 
 
         return self.lives_remaining 
-    
 
     def __str__(self) -> str: 
         return (
