@@ -265,7 +265,7 @@ class Statistics:
     ## Full game processing 
 
     def record_completed_game(
-            self,
+        self,
         *,
         won: bool,
         score: int,
@@ -299,7 +299,7 @@ class Statistics:
         else:
             self.add_difficulty_loss(difficulty)
 
-        self.add_mode_game(mode)
+        self.add_game_mode(mode)
 
         if won:
             self.add_mode_win(mode)
