@@ -44,7 +44,7 @@ class GameTimer:
     def reset(self) -> None: 
         # Resets the timer 
 
-        self.start = None 
+        self.start_time = None 
         self.pause_start = None 
         self.pause_duration = 0.0 
         self.running = False 
@@ -77,7 +77,7 @@ class GameTimer:
 
     ## Time 
 
-    def elapsed(self) -> None: 
+    def elapsed(self) -> float: 
         # Returns elapsed time in terms of seconds 
 
         if not self.running: 
@@ -110,7 +110,7 @@ class GameTimer:
         # Returns True if the countdown reaches 0 
 
         if self.time_limit is None: 
-            return None 
+            return False 
         return self.remaining() <= 0 
     
 
@@ -144,13 +144,13 @@ class GameTimer:
     ## Properties 
 
     @property 
-    def running(self) -> bool: 
+    def _running(self) -> bool: 
         # Returns whether the timer is running 
 
         return self.running 
     
     @property 
-    def paused(self) -> bool: 
+    def _spaused(self) -> bool: 
         # Returns whether the timer is paused 
 
         return self.paused 
@@ -181,6 +181,6 @@ class GameTimer:
             f"Game Timer("
             f"time_limit = {self.time_limit}, " 
             f"running = {self.running}, " 
-            f"paused = {self.paused}" 
+            f"paused = {self.paused})" 
         ) 
 
