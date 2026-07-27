@@ -153,6 +153,8 @@ class Validator:
                 raise ValueError(
                     "Player name contains invalid characters" 
                 ) 
+
+        return name 
             
     
     ## Numbers 
