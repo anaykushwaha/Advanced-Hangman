@@ -160,13 +160,13 @@ class GameModeManager:
         return cls._MODES[mode]
 
     @classmethod
-    def get_all(cls): 
+    def get_all(cls) -> list[GameModeSettings]: 
         # Returns every mode 
 
         return list(cls._MODES.values())
 
     @classmethod
-    def get_names(cls):
+    def get_names(cls) -> list[str]:
         # Returns all game mode names 
 
         return [
@@ -249,7 +249,7 @@ class GameModeManager:
         return cls.get_settings().allow_save
 
     @classmethod
-    def get_time_limit(cls): 
+    def get_time_limit(cls) -> int | None: 
         # Returns the active time limit 
         # Returns None if unlimited 
 
