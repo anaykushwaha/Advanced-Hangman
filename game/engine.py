@@ -14,13 +14,11 @@ from game.scoreboard import ScoreBoard
 from game.statistics import Statistics 
 from game.save_system import SaveSystem 
 from game.timer import GameTimer 
-from game.difficulty import Difficulty 
+from game.difficulty import Difficulty, DifficultyManager  
 from game.game_mode import GameMode 
 from game.renderer import Renderer 
-from utils.constants import ( 
-    MAX_HANGMAN_STAGE, 
-    DEFAULT_PLAYER_NAME, 
-) 
+from utils.constants import (DEFAULT_PLAYER_NAME) 
+
 
 class Engine: 
     # Controls the complete gameplay loop 
@@ -59,7 +57,8 @@ class Engine:
         # Game state 
         self.score = 0 
         self.hangman_stage = 0 
-        self.remaining_lives = MAX_HANGMAN_STAGE 
+        settings = DifficultyManager.get(self.difficulty) 
+        self.remaining_lives = settings.max_lives 
 
         self.game_running = False 
         self.game_won = False 
@@ -80,7 +79,8 @@ class Engine:
 
         self.score = 0 
         self.hangman_stage = 0 
-        self.remaining_lives = MAX_HANGMAN_STAGE 
+        settings = DifficultyManager.get(self.difficulty) 
+        self.remaining_lives = settings.max_lives 
 
         self.game_running = False 
         self.game_won = False 
@@ -106,9 +106,7 @@ class Engine:
     def load_new_word(self) -> None: 
         # Retrieves a new puzzle from the WordManager 
 
-        word, category = self.word_manager.get_random_word(
-            self.difficulty 
-        ) 
+        word, category = self.word_manager.get_random_word(self.difficulty) 
 
         self.word = word.upper() 
         self.category = category 
@@ -146,7 +144,9 @@ class Engine:
 
         guess = guess.upper() 
 
-        if not self.validator.is_valid_letter(guess):
+        try: 
+            guess = self.validator.validate_letter(guess) 
+        except ValueError: 
             return False 
 
         if (
@@ -167,8 +167,11 @@ class Engine:
 
         self.correct_letters.add(letter) 
         self.update_display_word() 
+        self.correct_letters.add(letter) 
+        self.update_display_word() 
         occurrences = self.word.count(letter) 
-        self.score += occurrences * 10 
+        for x in range(occurrences): 
+            self.score += self.scoreboard.correct_guess(self.player) 
     
     def handle_wrong_guess(self, letter: str) -> None: 
         # Handles an incorrect guess 
@@ -200,10 +203,12 @@ class Engine:
     def is_game_over(self) -> bool: 
         # Determines whether the player has lost 
 
+        settings = DifficultyManager.get(self.difficulty) 
+
         return (
             self.hangman_stage 
-            >= MAX_HANGMAN_STAGE 
-        ) 
+            >= settings.max_lives 
+        )  
 
     def finish_game(self) -> None: 
         # Stops gameplay 
@@ -216,6 +221,11 @@ class Engine:
         # Finalizes a winning game 
 
         self.game_won = True 
+        self.score += self.scoreboard.word_completed() 
+        self.score += self.scoreboard.calculate_final_score(
+            self.player, 
+            self.elapsed_time() 
+        ) 
         self.finish_game() 
 
     def finish_defeat(self) -> None: 
@@ -228,7 +238,7 @@ class Engine:
     def elapsed_time(self) -> int: 
         # Returns the elapsed game time 
 
-        return (self.timer.elapsed_seconds()) 
+        return (self.timer.elapsed()) 
 
     def remaining_guess_count(self) -> int: 
         # Returns remaining guesses 
@@ -277,9 +287,7 @@ class Engine:
         if not guess: 
             return 
         if (
-            not self.validator.is_valid_letter(
-                guess 
-            ) 
+            not self.validator.is_single_letter(guess) 
         ): 
             self.renderer.error(
                 "Please enter a single alphabetic letter" 
@@ -336,12 +344,15 @@ class Engine:
     def record_statistics(self) -> None: 
         # Records statistics for the completed game 
 
-        self.statistics.record_game(
+        self.statistics.record_completed_game( 
             won=self.game_won, 
             score=self.score, 
+            streak=self.player.current_streak, 
+            play_time=self.elapsed_time(), 
+            letters_guessed=self.total_guesses(), 
+            hints_used=self.player.hints_used, 
             difficulty=self.difficulty.name, 
-            elapsed_time=self.elapsed_time(), 
-            wrong_guesses=len(self.wrong_letters) 
+            mode=self.game_mode.value, 
         ) 
 
     def update_player_profile(self) -> None: 
@@ -354,32 +365,17 @@ class Engine:
         else: 
             self.player.games_lost += 1 
 
-    def update_leaderboard(self) -> None: 
-        # Adds the player's score to the leaderboard 
-
-        self.scoreboard.add_score(
-            self.player.name, 
-            self.score, 
-        ) 
-
     def save_statistics(self) -> None: 
         # Saves updated statstics 
 
         self.statistics.save() 
-
-    def save_leaderboard(self) -> None: 
-        # Saves the leaderboard 
-
-        self.scoreboard.save() 
 
     def finalize_results(self) -> None: 
         # Performs every common end-game action 
 
         self.update_player_profile() 
         self.record_statistics() 
-        self.update_leaderboard() 
-        self.save_statistics() 
-        self.save_leaderboard() 
+        self.save_statistics()  
 
     def handle_victory(self) -> None: 
         # Handles a completed victory 
@@ -408,15 +404,8 @@ class Engine:
     def show_statistics(self) -> None: 
         # Displays recorded statistics 
 
-        self.renderer.draw_statistics_screen(self.statistics.export()) 
-        self.renderer.wait_for_key() 
-
-    def show_leaderboard(self) -> None: 
-        # Displays leaderboard rankings 
-
-        self.renderer.draw_leaderboard( 
-            self.scoreboard.get_scores() 
-        ) 
+        report = self.statistics.generate_report() 
+        self.renderer.draw_statistics_screen(report) 
         self.renderer.wait_for_key() 
     
 
@@ -579,9 +568,10 @@ class Engine:
         # Returns True if valid 
 
         mapping = {
-            "1": GameMode.CLASSIC, 
-            "2": GameMode.TIMED, 
-            "3": GameMode.SURVIVAL 
+        "1": GameMode.CLASSIC, 
+        "2": GameMode.TIMED, 
+        "3": GameMode.ENDLESS, 
+        "4": GameMode.DAILY, 
         } 
 
         mode = mapping.get(choice) 
