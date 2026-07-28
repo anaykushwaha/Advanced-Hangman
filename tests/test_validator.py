@@ -1,264 +1,272 @@
-# test_validator.py 
-# Unit tests for validator.py 
+# test_validator.py
+# Unit tests for validator.py
 
-import unittest 
-from game.validator import Validator 
+import unittest
+
+from game.validator import Validator
 
 
 class TestValidator(unittest.TestCase): 
-    # Unit tests for the Validator class 
+    # Unit tests for the Player class 
 
-    def setUp(self):
-        self.validator = Validator()
+    # normalize_letter
 
-    # Letter Validation
-
-    def test_valid_single_letter_lowercase(self):
-        self.assertTrue(
-            self.validator.validate_letter("a")
+    def test_normalize_letter(self):
+        self.assertEqual(
+            Validator.normalize_letter(" a "),
+            "A"
         )
 
-    def test_valid_single_letter_uppercase(self):
+    # is_single_letter
+
+    def test_single_letter_lowercase(self):
         self.assertTrue(
-            self.validator.validate_letter("Z")
+            Validator.is_single_letter("a")
         )
 
-    def test_invalid_empty_string(self):
+    def test_single_letter_uppercase(self):
+        self.assertTrue(
+            Validator.is_single_letter("Z")
+        )
+
+    def test_invalid_empty(self):
         self.assertFalse(
-            self.validator.validate_letter("")
+            Validator.is_single_letter("")
         )
 
     def test_invalid_multiple_letters(self):
         self.assertFalse(
-            self.validator.validate_letter("ab")
+            Validator.is_single_letter("ab")
         )
 
-    def test_invalid_number(self):
+    def test_invalid_digit(self):
         self.assertFalse(
-            self.validator.validate_letter("5")
+            Validator.is_single_letter("5")
         )
 
-    def test_invalid_special_character(self):
+    def test_invalid_symbol(self):
         self.assertFalse(
-            self.validator.validate_letter("@")
+            Validator.is_single_letter("@")
         )
 
-    def test_invalid_space(self):
-        self.assertFalse(
-            self.validator.validate_letter(" ")
+    # validate_letter
+
+    def test_validate_letter_returns_uppercase(self):
+        self.assertEqual(
+            Validator.validate_letter("b"),
+            "B"
         )
 
-    # Duplicate Guess Validation
-
-    def test_new_letter_not_duplicate(self):
-        guessed = {"A", "B", "C"}
-
-        self.assertFalse(
-            self.validator.is_duplicate_guess(
-                "D",
-                guessed
-            )
+    def test_validate_letter_strips_spaces(self):
+        self.assertEqual(
+            Validator.validate_letter(" c "),
+            "C"
         )
 
-    def test_duplicate_guess(self):
-        guessed = {"A", "B", "C"}
+    def test_validate_letter_invalid(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_letter("12")
 
+    def test_validate_letter_empty(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_letter("")
+
+    # already_guessed
+
+    def test_already_guessed_correct(self):
         self.assertTrue(
-            self.validator.is_duplicate_guess(
+            Validator.already_guessed(
                 "A",
-                guessed
+                {"A"},
+                set()
             )
         )
 
-    def test_duplicate_case_insensitive(self):
-        guessed = {"A"}
-
+    def test_already_guessed_wrong(self):
         self.assertTrue(
-            self.validator.is_duplicate_guess(
-                "a",
-                guessed
+            Validator.already_guessed(
+                "B",
+                set(),
+                {"B"}
             )
         )
 
-    # Menu Choice Validation
+    def test_not_already_guessed(self):
+        self.assertFalse(
+            Validator.already_guessed(
+                "C",
+                {"A"},
+                {"B"}
+            )
+        )
+
+    # Menu validation
 
     def test_valid_menu_choice(self):
         self.assertTrue(
-            self.validator.validate_menu_choice(
-                "3",
-                1,
-                5
-            )
+            Validator.valid_menu_choice("1")
         )
 
-    def test_menu_choice_too_small(self):
+    def test_invalid_menu_choice(self):
         self.assertFalse(
-            self.validator.validate_menu_choice(
-                "0",
-                1,
-                5
-            )
+            Validator.valid_menu_choice("99")
         )
 
-    def test_menu_choice_too_large(self):
+    # Yes / No
+
+    def test_is_yes(self):
+        self.assertTrue(
+            Validator.is_yes("y")
+        )
+
+    def test_is_no(self):
+        self.assertTrue(
+            Validator.is_no("n")
+        )
+
+    def test_not_yes(self):
         self.assertFalse(
-            self.validator.validate_menu_choice(
-                "6",
-                1,
-                5
-            )
+            Validator.is_yes("maybe")
         )
 
-    def test_menu_choice_not_number(self):
+    def test_not_no(self):
         self.assertFalse(
-            self.validator.validate_menu_choice(
-                "abc",
-                1,
-                5
-            )
+            Validator.is_no("yes")
         )
 
-    # Player Name Validation
+    # Commands
+
+    def test_is_quit(self):
+        self.assertTrue(
+            Validator.is_quit("quit")
+        )
+
+    def test_is_save(self):
+        self.assertTrue(
+            Validator.is_save("save")
+        )
+
+    def test_is_load(self):
+        self.assertTrue(
+            Validator.is_load("load")
+        )
+
+    def test_is_hint(self):
+        self.assertTrue(
+            Validator.is_hint("hint")
+        )
+
+    # Player names
 
     def test_valid_player_name(self):
-        self.assertTrue(
-            self.validator.validate_player_name(
-                "Anay"
-            )
+        self.assertEqual(
+            Validator.validate_player_name("Anay"),
+            "Anay"
         )
 
-    def test_player_name_with_spaces(self):
-        self.assertTrue(
-            self.validator.validate_player_name(
-                "John Smith"
-            )
+    def test_player_name_trimmed(self):
+        self.assertEqual(
+            Validator.validate_player_name("  John  "),
+            "John"
         )
 
     def test_empty_player_name(self):
-        self.assertFalse(
-            self.validator.validate_player_name("")
-        )
+        with self.assertRaises(ValueError):
+            Validator.validate_player_name("")
 
-    def test_player_name_only_spaces(self):
-        self.assertFalse(
-            self.validator.validate_player_name(
-                "     "
+    def test_long_player_name(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_player_name(
+                "A" * 25
             )
-        )
 
-    def test_player_name_too_long(self):
-        name = "A" * 100
+    def test_invalid_player_name_character(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_player_name(
+                "John!"
+            )
 
-        self.assertFalse(
-            self.validator.validate_player_name(name)
-        )
+    # Positive numbers
 
-    # Difficulty Validation
-
-    def test_valid_difficulty(self):
+    def test_positive_number(self):
         self.assertTrue(
-            self.validator.validate_difficulty(
-                "Easy"
-            )
+            Validator.is_positive_number("5")
         )
 
-    def test_invalid_difficulty(self):
+    def test_zero_not_positive(self):
         self.assertFalse(
-            self.validator.validate_difficulty(
-                "Impossible++"
-            )
+            Validator.is_positive_number("0")
         )
 
-    # Game Mode Validation
+    def test_negative_not_positive(self):
+        self.assertFalse(
+            Validator.is_positive_number("-3")
+        )
 
-    def test_valid_game_mode(self):
+    def test_not_number(self):
+        self.assertFalse(
+            Validator.is_positive_number("abc")
+        )
+
+    # Word validation
+
+    def test_validate_word(self):
+        self.assertEqual(
+            Validator.validate_word("python"),
+            "PYTHON"
+        )
+
+    def test_validate_word_with_space(self):
+        self.assertEqual(
+            Validator.validate_word("ice cream"),
+            "ICE CREAM"
+        )
+
+    def test_validate_word_invalid_character(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_word("abc123")
+
+    def test_empty_word(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_word("")
+
+    # Category validation
+
+    def test_valid_category(self):
+        self.assertEqual(
+            Validator.validate_category(
+                "Animals"
+            ),
+            "Animals"
+        )
+
+    def test_trimmed_category(self):
+        self.assertEqual(
+            Validator.validate_category(
+                "  Food  "
+            ),
+            "Food"
+        )
+
+    def test_empty_category(self):
+        with self.assertRaises(ValueError):
+            Validator.validate_category(
+                ""
+            )
+
+    # not_empty
+
+    def test_not_empty(self):
         self.assertTrue(
-            self.validator.validate_game_mode(
-                "Classic"
-            )
+            Validator.not_empty("Hello")
         )
 
-    def test_invalid_game_mode(self):
+    def test_not_empty_spaces(self):
         self.assertFalse(
-            self.validator.validate_game_mode(
-                "Sandbox"
-            )
-        )
-
-    # File Name Validation
-
-    def test_valid_json_filename(self):
-        self.assertTrue(
-            self.validator.validate_filename(
-                "easy_words.json"
-            )
-        )
-
-    def test_invalid_filename(self):
-        self.assertFalse(
-            self.validator.validate_filename(
-                "../passwords.txt"
-            )
-        )
-
-    # Generic Integer Validation
-
-    def test_valid_integer(self):
-        self.assertTrue(
-            self.validator.is_integer("42")
-        )
-
-    def test_negative_integer(self):
-        self.assertTrue(
-            self.validator.is_integer("-10")
-        )
-
-    def test_invalid_integer(self):
-        self.assertFalse(
-            self.validator.is_integer("12.5")
-        )
-
-    def test_invalid_integer_letters(self):
-        self.assertFalse(
-            self.validator.is_integer("abc")
-        )
-
-    # Edge Cases
-
-    def test_none_letter(self):
-        self.assertFalse(
-            self.validator.validate_letter(None)
-        )
-
-    def test_none_player_name(self):
-        self.assertFalse(
-            self.validator.validate_player_name(None)
-        )
-
-    def test_none_menu_choice(self):
-        self.assertFalse(
-            self.validator.validate_menu_choice(
-                None,
-                1,
-                5
-            )
-        )
-
-    def test_unicode_letter(self):
-        self.assertFalse(
-            self.validator.validate_letter("é")
-        )
-
-    def test_tab_character(self):
-        self.assertFalse(
-            self.validator.validate_letter("\t")
-        )
-
-    def test_newline_character(self):
-        self.assertFalse(
-            self.validator.validate_letter("\n")
+            Validator.not_empty("    ")
         )
 
 
 if __name__ == "__main__":
     unittest.main() 
+
