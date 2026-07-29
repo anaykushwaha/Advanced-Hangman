@@ -1,19 +1,19 @@
-# constants.py 
-# Global Constants used throughout the game 
+# constants.py
+# Global constants used throughout the game
 
-# IMPORTANT 
+# IMPORTANT
 # This file only contains constants 
 # No functions or classes belong here 
 
 import string
 
-# PROJECT INFORMATION 
+# Project Information
 
 PROJECT_NAME = "Advanced Hangman"
 PROJECT_VERSION = "1.0.0"
 AUTHOR = "Anay Kushwaha"
 
-# FILE PATHS 
+# File Paths
 
 ASSETS_FOLDER = "assets"
 
@@ -31,31 +31,55 @@ SAVE_FILE = "data/saves/savegame.json"
 
 LOGO_FILE = "assets/logo.txt"
 
-# TERMINAL LAYOUT
+JSON_EXTENSION = ".json"
+TEXT_EXTENSION = ".txt"
+
+# Terminal Layout
 
 SCREEN_WIDTH = 80
-
 MENU_WIDTH = 60
-
 PANEL_WIDTH = 74
+REPORT_WIDTH = 50
 
 SEPARATOR = "=" * PANEL_WIDTH
-
 THIN_SEPARATOR = "-" * PANEL_WIDTH
-
 DOUBLE_SEPARATOR = "═" * PANEL_WIDTH
 
-# GAME SETTINGS
+# Game Settings
 
 MAX_HANGMAN_STAGE = 12
 
-MIN_WORD_LENGTH = 3
+DEFAULT_LIVES = 12
 
+DEFAULT_SCORE = 0
+DEFAULT_HIGH_SCORE = 0
+
+DEFAULT_STREAK = 0
+DEFAULT_HINTS_USED = 0
+
+MIN_WORD_LENGTH = 3
 MAX_WORD_LENGTH = 80
 
+MAX_PLAYER_NAME_LENGTH = 20
 MAX_CATEGORY_NAME_LENGTH = 30
 
-# INPUT
+DEFAULT_PLAYER_NAME = "Player"
+
+# Difficulties
+
+DIFFICULTY_NAMES = (
+    "Easy",
+    "Medium",
+    "Hard",
+    "Impossible",
+)
+
+EASY_SCORE_MULTIPLIER = 1.0
+MEDIUM_SCORE_MULTIPLIER = 1.5
+HARD_SCORE_MULTIPLIER = 2.0
+IMPOSSIBLE_SCORE_MULTIPLIER = 3.0
+
+# Input
 
 VALID_LETTERS = set(string.ascii_uppercase)
 
@@ -64,35 +88,32 @@ VALID_MENU_INPUT = {
     "2",
     "3",
     "4",
-    "5"
+    "5",
 }
 
 YES_RESPONSES = {
     "Y",
-    "YES"
+    "YES",
 }
 
 NO_RESPONSES = {
     "N",
-    "NO"
+    "NO",
 }
 
 QUIT_COMMANDS = {
     "QUIT",
     "EXIT",
-    "Q"
+    "Q",
 }
 
 SAVE_COMMAND = "SAVE"
-
 LOAD_COMMAND = "LOAD"
-
 HINT_COMMAND = "HINT"
 
-# SCORING
+# Scoring
 
-# These are BASE values.
-# Difficulty multipliers are applied later.
+# Base values before the difficulty multiplier is applied.
 
 POINTS_CORRECT_GUESS = 50
 
@@ -114,7 +135,7 @@ POINTS_DUPLICATE_GUESS = -10
 
 POINTS_INVALID_INPUT = 0
 
-# COMBO SYSTEM 
+# Combo System
 
 COMBO_START = 3
 
@@ -122,7 +143,7 @@ COMBO_BONUS = 10
 
 MAX_COMBO_MULTIPLIER = 5
 
-# TIMER  
+# Timer
 
 DEFAULT_TIME_LIMIT = 300
 
@@ -130,7 +151,7 @@ COUNTDOWN_WARNING = 60
 
 FAST_FINISH_TIME = 120
 
-# ANIMATIONS 
+# Animations
 
 TYPEWRITER_DELAY = 0.02
 
@@ -142,16 +163,16 @@ WIN_DELAY = 0.05
 
 LOSE_DELAY = 0.08
 
-LOADING_DELAY = 0.04
+LOADING_DELAY = 0.04 
 
-# MENUS
+# Menus
 
 MAIN_MENU = (
     "New Game",
     "Load Saved Game",
     "Statistics",
     "Settings",
-    "Quit"
+    "Quit",
 )
 
 SETTINGS_MENU = (
@@ -159,25 +180,25 @@ SETTINGS_MENU = (
     "Game Mode",
     "Theme",
     "Reset Statistics",
-    "Back"
+    "Back",
 )
 
 STATISTICS_MENU = (
     "Lifetime Statistics",
     "High Scores",
-    "Back"
+    "Back",
 )
 
-# GAME MODES
+# Game Modes
 
 GAME_MODES = (
     "Classic",
     "Timed",
     "Endless",
-    "Daily Challenge"
+    "Daily Challenge",
 )
 
-# CATEGORIES
+# Categories
 
 WORD_CATEGORIES = (
     "Animals",
@@ -188,10 +209,10 @@ WORD_CATEGORIES = (
     "History",
     "Food",
     "Space",
-    "Technology"
+    "Technology",
 )
 
-# MESSAGES
+# Messages
 
 WELCOME_MESSAGE = (
     "Welcome to Advanced Hangman!"
@@ -217,11 +238,7 @@ LOSS_MESSAGE = (
     "Game Over!"
 )
 
-# DEFAULT PLAYER
-
-DEFAULT_PLAYER_NAME = "Player"
-
-# JSON KEYS
+# JSON Keys
 
 JSON_PLAYER = "player"
 
@@ -245,7 +262,7 @@ JSON_TIME = "time"
 
 JSON_HINTS = "hints_used"
 
-# STATISTICS KEYS
+# Statistics Keys
 
 STAT_GAMES_PLAYED = "games_played"
 
@@ -255,14 +272,87 @@ STAT_GAMES_LOST = "games_lost"
 
 STAT_TOTAL_SCORE = "total_score"
 
-STAT_HIGH_SCORE = "high_score"
+STAT_HIGHEST_SCORE = "highest_score"
 
-STAT_FASTEST_WIN = "fastest_win"
+STAT_TOTAL_PLAY_TIME = "total_play_time"
+
+STAT_FASTEST_GAME = "fastest_game"
 
 STAT_LONGEST_STREAK = "longest_streak"
 
-STAT_TOTAL_GUESSES = "total_guesses"
+STAT_WORDS_COMPLETED = "words_completed"
 
-STAT_CORRECT_GUESSES = "correct_guesses"
+STAT_LETTERS_GUESSED = "letters_guessed"
 
-STAT_WRONG_GUESSES = "wrong_guesses"
+STAT_HINTS_USED = "hints_used"
+
+STAT_DIFFICULTY_STATS = "difficulty_stats"
+
+STAT_MODE_STATS = "mode_stats" 
+
+# Default Statistics
+
+DEFAULT_STATISTICS = {
+    "games_played": 0,
+    "games_won": 0,
+    "games_lost": 0,
+
+    "highest_score": 0,
+    "total_score": 0,
+
+    "total_play_time": 0.0,
+    "fastest_game": 0.0,
+
+    "longest_streak": 0,
+
+    "words_completed": 0,
+    "letters_guessed": 0,
+    "hints_used": 0,
+
+    "difficulty_stats": {
+        "Easy": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Medium": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Hard": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Impossible": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+    },
+
+    "mode_stats": {
+        "Classic": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Timed": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Endless": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+        "Daily Challenge": {
+            "played": 0,
+            "won": 0,
+            "lost": 0,
+        },
+    },
+} 
+
