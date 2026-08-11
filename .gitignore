@@ -1,51 +1,56 @@
 # Advanced Hangman
 # .gitignore
 
-
 # Python Bytecode
-
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual Environments 
+# Python Cache / Runtime Files
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.ruff_cache/
+.pytype/
+.tox/
+.nox/
 
+# Virtual Environments
 .venv/
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
 
 # IDE / Editor Settings
-
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.vscode-test/
 
 # Visual Studio
 .vs/
 
 # Operating System Files
-
 .DS_Store
+.DS_Store?
 Thumbs.db
 desktop.ini
 
-# Python Tooling & Test Cache
-
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.pyre/
-.tox/
-.nox/
-
 # Coverage Reports
-
 .coverage
 .coverage.*
 htmlcov/
+coverage.xml
+*.cover
+.pytest_cache/
 
-# Build & Distribution
-
+# Build / Distribution
 build/
 dist/
 downloads/
@@ -62,33 +67,111 @@ wheels/
 *.egg
 pip-wheel-metadata/
 
-# Installer Logs
-
+# Python Packaging
 pip-log.txt
 pip-delete-this-directory.txt
+pip-uninstall.log
 
-# Log Files
-
+# Logs
 *.log
+logs/
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+
+# Environment Variables / Secrets
+.env
+.env.*
+!.env.example
 
 # Jupyter Notebook
-
 .ipynb_checkpoints/
 
 # PyInstaller
-
 *.manifest
 *.spec
 
-# Environment Variables
+# Profiling / Performance
+*.prof
+*.lprof
 
-.env
-.env.*
+# Test Artifacts
+.pytest_cache/
+.nox/
+.tox/
+test-results/
+junit.xml
 
-# Local Save Data (Optional)
+# Type Checking
+.dmypy.json
+dmypy.json
+.pyre/
 
-# Uncomment the following line if you want your
-# personal save progress to remain local and not
-# be committed to Git.
+# Ruff / Formatting
+.ruff_cache/
 
-# data/saves/savegame.json 
+# Local Development Data
+*.sqlite
+*.sqlite3
+*.db
+
+# Local Save Data
+# Keep the game's save directory structure,
+# but do not commit personal save progress.
+data/saves/*.json
+
+# Allow a placeholder file to keep the directory in Git
+!data/saves/.gitkeep
+
+# Local Statistics Data
+# Uncomment if statistics should remain local.
+# data/statistics.json
+
+# Generated Documentation / Export Files
+docs/_build/
+docs/build/
+docs/_static/
+*.pdf
+
+# Generated Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# OS / File Manager Metadata
+.Trashes/
+.Spotlight-V100/
+.fseventsd/
+.AppleDouble
+.LSOverride
+
+# Windows Explorer
+$RECYCLE.BIN/
+*.lnk
+
+# macOS / Linux temporary files
+*.swp
+*.swo
+
+# VS Code local history
+.history/
+
+# Project-specific temporary directories
+temp/
+tmp/
+.cache/
+
+# Secrets / Credentials
+*.pem
+*.key
+*.crt
+credentials.json
+secrets.json 
+
