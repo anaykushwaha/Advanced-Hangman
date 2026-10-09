@@ -1,10 +1,15 @@
-# ==================================================
 # Advanced Hangman
-# Requirements
-# ==================================================
 
-# This project uses only Python's Standard Library.
-# No external packages are required.
+# Python dependency requirements
 
-# Minimum Python Version
-python>=3.10 
+# Requires Python 3.10 or newer.
+
+# All application dependencies use the Python standard library.
+
+# No third-party packages are required to run the game.
+
+# Install dependencies with:
+
+# python -m pip install -r requirements.txt
+
+# No package installation is currently necessary.
