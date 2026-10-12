@@ -1,39 +1,73 @@
+
 # Advanced Hangman — Architecture Documentation
 
 ## 1. Architecture Overview
 
-Advanced Hangman is a modular Python terminal application designed around separation of responsibilities.
+Advanced Hangman is a modular Python terminal application designed around separation of concerns, maintainability, and testability.
 
-The project is divided into several layers:
+The project divides responsibilities across dedicated modules instead of placing the entire application in one large file.
 
-```text
-Advanced-Hangman/
-│
-├── Application Entry Point
-│       ↓
-├── Game Logic Layer
-│       ↓
-├── Utility Layer
-│       ↓
-├── Resource / Data Layer
-│       ↓
-└── Testing Layer
-```
+The main architectural components are:
 
-The primary goal of this architecture is to avoid placing all functionality inside one large file.
+- **Application Layer:** Starts the application and manages the main menu.
+- **Game Logic Layer:** Coordinates gameplay and manages individual game systems.
+- **Utility Layer:** Provides reusable functions and file operations.
+- **Assets Layer:** Contains static visual resources and terminal styling.
+- **Data Layer:** Stores word databases, statistics, and saved game information.
+- **Testing Layer:** Contains automated tests for application components.
+- **Documentation Layer:** Explains the architecture and individual modules.
 
-Instead, individual systems are separated into modules with clearly defined responsibilities.
+The central gameplay controller is `game/engine.py`. It coordinates components such as the player, word manager, validator, scoreboard, statistics manager, save system, timer, difficulty settings, game modes, and renderer.
 
-The main gameplay controller is `game/engine.py`, while supporting systems such as validation, scoring, word management, saving, statistics, timing, difficulty, and game modes are implemented independently.
+The main architectural objective is to make each component responsible for a clearly defined part of the application.
 
-## 2. Complete Project Structure
+## 2. Architecture Goals
 
-The current project structure is:
+The architecture follows several practical software engineering principles.
+
+### 2.1 Separation of Concerns
+
+Each module should have one primary responsibility.
+
+For example:
+
+- `game/validator.py` validates player input.
+- `game/word_manager.py` manages word selection and word-related operations.
+- `game/scoreboard.py` handles scoring calculations.
+- `game/save_system.py` manages saved game state.
+- `utils/file_manager.py` provides reusable file operations.
+
+This prevents unrelated functionality from becoming tightly coupled.
+
+### 2.2 Modularity
+
+Individual systems are implemented in separate Python modules.
+
+A module can be updated or extended without unnecessarily changing unrelated parts of the application.
+
+### 2.3 Testability
+
+Components should be testable independently wherever practical.
+
+Input, output, file access, timing, and random selection should be isolated or mocked when necessary.
+
+### 2.4 Maintainability
+
+A consistent directory structure and clear module responsibilities make the project easier to understand, debug, and extend.
+
+### 2.5 Extensibility
+
+The architecture supports future additions such as new difficulty levels, game modes, scoring rules, word categories, and terminal effects.
+
+## 3. Complete Project Structure
+
+The project is organized into the following directories and files:
 
 ```text
 Advanced-Hangman/
 │
 ├── README.md
+├── LICENSE
 ├── requirements.txt
 ├── .gitignore
 ├── main.py
@@ -65,6 +99,7 @@ Advanced-Hangman/
 │   ├── impossible_words.json
 │   ├── statistics.json
 │   └── saves/
+│       ├── .gitkeep
 │       └── savegame.json
 │
 ├── utils/
@@ -85,6 +120,7 @@ Advanced-Hangman/
 │
 └── docs/
     ├── architecture.md
+    ├── main.md
     ├── game.md
     ├── utils.md
     ├── assets.md
@@ -92,276 +128,465 @@ Advanced-Hangman/
     └── tests.md
 ```
 
-## 3. High-Level Architecture
+The exact files present in the working directory should be kept synchronized with this documentation.
 
-The application can be viewed as five major areas:
+The `data/saves/.gitkeep` file is an optional placeholder for preserving the save directory in Git. A personal `savegame.json` may be generated at runtime and does not need to be committed.
+
+## 4. High-Level Architecture
+
+The application follows a layered design in which the entry point starts the program, the engine coordinates gameplay, specialized components perform individual tasks, and supporting modules provide resources and persistence.
 
 ```text
-                    ┌──────────────────────┐
-                    │       main.py        │
-                    │   Application Entry  │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │    game/engine.py    │
-                    │   Gameplay Control   │
-                    └──────────┬───────────┘
-                               │
-        ┌──────────────────────┼──────────────────────┐
-        │          │           │          │            │
-        ▼          ▼           ▼          ▼            ▼
-     Player    WordManager  Validator  ScoreBoard   Timer
-        │          │           │          │            │
-        └──────────┴───────────┴──────────┴────────────┘
-                               │
-                    ┌──────────┴───────────┐
-                    │                      │
-                    ▼                      ▼
-               Statistics             SaveSystem
-                    │                      │
-                    │                      ▼
-                    │                FileManager
-                    │                      │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                             data/
+                    Advanced Hangman
+                           |
+                           v
+                       main.py
+                    Application Layer
+                           |
+                           v
+                     game/engine.py
+                    Gameplay Controller
+                           |
+           +---------------+----------------+
+           |               |                |
+           v               v                v
+        Player         WordManager       Validator
+           |               |                |
+           +---------------+----------------+
+                           |
+           +---------------+----------------+
+           |               |                |
+           v               v                v
+       ScoreBoard       GameTimer         Renderer
+           |                                |
+           v                                v
+       Statistics                       Terminal UI
+           |
+           v
+       SaveSystem
+           |
+           v
+       FileManager
+           |
+           v
+          data/
 
-Engine
-  │
-  ├── DifficultyManager
-  ├── GameModeManager
-  └── Renderer
-          │
-          ├── Colors
-          ├── HangmanFrames
-          ├── Banner
-          └── Animations
+Supporting Resources:
+    assets/
+    utils/
+
+Verification:
+    tests/
+
+Technical Documentation:
+    docs/
 ```
 
-## 4. Layered Architecture
+This diagram describes the intended logical organization. The actual runtime dependencies should be verified against the Python imports and method calls in the implementation.
 
-The project uses a practical layered architecture rather than a strict enterprise framework.
+## 5. Layered Architecture
 
-### Layer 1 — Application
+### 5.1 Application Layer
+
+Location:
 
 ```text
 main.py
 ```
 
-Responsible for starting the application.
+The application layer provides the program's entry point and coordinates application-level interactions.
 
-### Layer 2 — Game Logic
+Its responsibilities include:
+
+- Initializing the application.
+- Starting the main menu.
+- Handling menu selections.
+- Starting a new game.
+- Offering access to saved games.
+- Displaying statistics and leaderboard options.
+- Providing help and settings menus.
+- Handling application exit.
+
+The entry point should delegate gameplay behavior to the engine instead of duplicating game rules.
+
+### 5.2 Game Logic Layer
+
+Location:
 
 ```text
 game/
 ```
 
-Contains the actual game systems and gameplay coordination.
+The game package contains the main gameplay controller and supporting game systems.
 
-### Layer 3 — Utilities
+Its responsibilities include:
+
+- Managing game state.
+- Processing guesses.
+- Checking victory and defeat conditions.
+- Coordinating scoring and player updates.
+- Managing difficulty and game modes.
+- Controlling timers.
+- Coordinating saves and statistics.
+- Requesting terminal output from the renderer.
+
+### 5.3 Utility Layer
+
+Location:
 
 ```text
 utils/
 ```
 
-Contains reusable functionality shared by different systems.
+The utility package provides reusable functionality that is not specific to a single gameplay rule.
 
-### Layer 4 — Resources and Persistent Data
+Its responsibilities include:
+
+- File operations.
+- Shared constants.
+- General helper functions.
+- Terminal animations.
+- Application banners.
+
+Generic utility modules should not depend on the game engine.
+
+### 5.4 Assets Layer
+
+Location:
 
 ```text
 assets/
+```
+
+The assets package contains static visual resources and presentation-related constants.
+
+Examples include ASCII artwork, terminal color definitions, and hangman illustrations.
+
+### 5.5 Data Layer
+
+Location:
+
+```text
 data/
 ```
 
-Contains static resources and persistent information.
+The data directory stores persistent information used by the application.
 
-### Layer 5 — Testing
+Examples include:
+
+- Difficulty-specific word databases.
+- Player statistics.
+- Saved game state.
+
+JSON files provide a straightforward storage format for this terminal application.
+
+### 5.6 Testing Layer
+
+Location:
 
 ```text
 tests/
 ```
 
-Contains automated tests for the application's logic.
+The testing layer contains automated tests for individual modules and their interactions.
 
-### Layer 6 — Documentation
+Tests should verify expected behavior without requiring unnecessary interactive terminal input.
+
+### 5.7 Documentation Layer
+
+Location:
 
 ```text
 docs/
 ```
 
-Contains technical documentation explaining the architecture and individual project components.
+The documentation layer contains Markdown files explaining the architecture, application entry point, game modules, utilities, assets, data files, and tests.
 
-## 5. Application Entry Point
+## 6. Application Entry Point
 
-### `main.py`
+### 6.1 `main.py`
 
-`main.py` is the entry point of the application.
+`main.py` is the starting point of the application.
 
-Its responsibility should be limited to starting the program rather than implementing gameplay rules.
-
-Conceptually:
+The intended startup sequence is:
 
 ```text
 Operating System
-       ↓
+       |
+       v
     main.py
-       ↓
-     Engine
-       ↓
-   Game Starts
+       |
+       v
+Initialize Application
+       |
+       v
+Initialize Engine
+       |
+       v
+Display Main Menu
+       |
+       v
+Handle User Selection
 ```
 
-Keeping the entry point small makes the application easier to understand and prevents startup code from becoming mixed with gameplay logic.
+The entry point should remain focused on application orchestration.
 
-## 6. Central Controller — Engine
+It should not contain duplicate implementations of input validation, scoring, word selection, or other gameplay rules already assigned to the game package.
 
-The most important architectural component is:
+### 6.2 Application Responsibilities
+
+The application controller may provide:
+
+- `start()` — begin the application.
+- `quit()` — terminate the application gracefully.
+- Main menu handling.
+- New-game setup.
+- Saved-game selection.
+- Help and settings menus.
+- Navigation to statistics and leaderboard functionality.
+
+These names describe the application interface and should be checked against the actual methods defined in `main.py`.
+
+### 6.3 Application and Engine Relationship
+
+The application and engine serve different purposes.
 
 ```text
-game/engine.py
+Application
+    |
+    | Handles application navigation
+    v
+Engine
+    |
+    | Coordinates gameplay
+    v
+Specialized Game Systems
 ```
 
-The `Engine` coordinates the major gameplay systems.
+The application decides which major operation to initiate. The engine manages the gameplay behavior associated with that operation.
 
-It does not need to implement every operation itself.
+## 7. Central Gameplay Controller
 
-Instead, it delegates responsibilities to specialized components.
+### 7.1 `game/engine.py`
 
-For example:
+The `Engine` is the central coordinator of gameplay.
+
+It connects the different game components and maintains the flow of a game session.
+
+Its responsibilities may include:
+
+- Initializing game systems.
+- Resetting game state.
+- Configuring difficulty and game mode.
+- Starting a new game.
+- Loading an existing game.
+- Selecting the secret word.
+- Processing guesses.
+- Updating the visible word.
+- Updating score and remaining lives.
+- Checking win and loss conditions.
+- Coordinating the renderer.
+- Recording completed games.
+- Saving and restoring progress.
+
+### 7.2 Engine as an Orchestrator
+
+The engine should coordinate specialized components rather than duplicate their responsibilities.
 
 ```text
 Engine
- │
- ├── Player
- ├── WordManager
- ├── Validator
- ├── ScoreBoard
- ├── Statistics
- ├── SaveSystem
- ├── GameTimer
- ├── DifficultyManager
- ├── GameModeManager
- └── Renderer
+  |
+  +-- Player
+  +-- WordManager
+  +-- Validator
+  +-- ScoreBoard
+  +-- Statistics
+  +-- SaveSystem
+  +-- GameTimer
+  +-- Difficulty Configuration
+  +-- Game Mode Configuration
+  +-- Renderer
 ```
 
-This makes `Engine` the **orchestrator** of the game.
+For example, when a player submits a guess, the engine coordinates validation, guess processing, state updates, and rendering.
 
-## 7. Game Logic Components
+The validator determines whether the input is valid. The engine determines how a valid guess affects the active game. The renderer presents the resulting state.
 
-### Player
+### 7.3 Engine Design Principles
+
+The engine should:
+
+- Coordinate rather than duplicate specialized logic.
+- Maintain a consistent game state.
+- Use clear and predictable state transitions.
+- Avoid direct low-level file operations when a dedicated persistence component exists.
+- Avoid mixing presentation formatting with gameplay rules.
+- Provide methods that can be tested independently.
+
+## 8. Game Logic Components
+
+### 8.1 Player
+
+File:
 
 ```text
 game/player.py
 ```
 
-Represents the current player and stores player-specific information.
+The player component represents the current player and stores player-specific information.
 
-Examples include:
+Depending on the implementation, this may include:
 
-* Name.
-* Score.
-* Games played.
-* Wins.
-* Losses.
-* Streak.
-* Hints used.
+- Player name.
+- Score.
+- Games played.
+- Wins and losses.
+- Current or best streak.
+- Hints used.
 
-### Word Manager
+The player component should manage player-related state rather than deciding how the entire game proceeds.
+
+### 8.2 Word Manager
+
+File:
 
 ```text
 game/word_manager.py
 ```
 
-Handles word-related functionality.
+The word manager handles word-related operations.
 
-Responsibilities include:
+Responsibilities may include:
 
-* Loading word data.
-* Selecting words.
-* Associating categories.
-* Generating hidden-word displays.
+- Loading word databases.
+- Selecting a secret word.
+- Associating words with categories.
+- Supporting difficulty-specific word selection.
+- Preparing hidden-word displays.
+- Managing word-related validation or lookup operations.
 
-### Validator
+The word manager should use the configured data files rather than duplicating word databases in Python source code.
+
+### 8.3 Validator
+
+File:
 
 ```text
 game/validator.py
 ```
 
-Ensures player input satisfies the game's requirements.
+The validator checks player input before it is processed by the game engine.
 
-For example, it can verify that a guess is a valid single alphabetic character.
+Validation may include:
 
-### ScoreBoard
+- Rejecting empty input.
+- Checking whether a guess is a valid letter.
+- Rejecting malformed guesses.
+- Detecting repeated guesses if that behavior is implemented.
+- Returning a clear validation result.
+
+Validation rules should be centralized to avoid inconsistent behavior across different menus or game modes.
+
+### 8.4 ScoreBoard
+
+File:
 
 ```text
 game/scoreboard.py
 ```
 
-Centralizes scoring rules.
+The scoreboard centralizes scoring calculations.
 
-This prevents score formulas from being scattered throughout the engine.
+Depending on the scoring system, it may calculate:
 
-### Statistics
+- Points for correct guesses.
+- Penalties for incorrect guesses.
+- Difficulty bonuses.
+- Completion bonuses.
+- Hint penalties.
+- Final game scores.
+
+The engine should request score updates from the scoring component instead of scattering scoring formulas throughout the application.
+
+### 8.5 Statistics
+
+File:
 
 ```text
 game/statistics.py
 ```
 
-Records and manages long-term performance data.
+The statistics component manages longer-term performance records.
 
-### SaveSystem
+Possible statistics include:
+
+- Total games played.
+- Total victories and defeats.
+- Win rate.
+- Highest score.
+- Longest winning streak.
+- Performance by difficulty.
+- Performance by game mode.
+
+The exact statistics depend on the fields implemented by the project.
+
+Statistics should be kept separate from an active game's temporary state.
+
+### 8.6 SaveSystem
+
+File:
 
 ```text
 game/save_system.py
 ```
 
-Manages the meaning and structure of saved game state.
+The save system manages the structure and interpretation of saved game data.
 
-### Timer
+Its responsibilities include:
+
+- Checking whether a save exists.
+- Creating a default save structure.
+- Saving current game state.
+- Loading saved state.
+- Updating save fields.
+- Deleting saves.
+- Clearing saved progress.
+- Checking saved-game status.
+
+The save system should use the file manager for low-level file operations.
+
+### 8.7 GameTimer
+
+File:
 
 ```text
 game/timer.py
 ```
 
-Tracks elapsed gameplay time and supports timed modes.
+The timer manages elapsed gameplay time and time-related behavior.
 
-### Difficulty
+Depending on the implementation, it may support:
+
+- Starting a timer.
+- Stopping a timer.
+- Measuring elapsed time.
+- Resetting timer state.
+- Checking time limits.
+- Supporting timed game modes.
+
+Time-based rules should be coordinated with the engine so that expiration leads to a consistent game-state transition.
+
+### 8.8 Difficulty Configuration
+
+File:
 
 ```text
 game/difficulty.py
 ```
 
-Centralizes difficulty-specific settings.
+The difficulty module defines the available difficulty levels and their associated settings.
 
-### Game Mode
-
-```text
-game/game_mode.py
-```
-
-Defines how the game operates under different modes.
-
-### Renderer
-
-```text
-game/renderer.py
-```
-
-Handles terminal presentation.
-
-It receives information from the engine and converts that state into user-facing output.
-
-## 8. Difficulty and Game Mode Separation
-
-Difficulty and game mode are intentionally independent concepts.
-
-### Difficulty
-
-Difficulty determines how challenging the game is.
-
-For example:
+The documented levels are:
 
 ```text
 Easy
@@ -370,19 +595,27 @@ Hard
 Impossible
 ```
 
-It can affect:
+Difficulty settings may control:
 
-* Lives.
-* Score multiplier.
-* Hint availability.
-* Hint penalties.
-* Word selection.
+- Maximum incorrect guesses or lives.
+- Scoring multipliers.
+- Hint availability.
+- Hint penalties.
+- Word database selection.
 
-### Game Mode
+A centralized difficulty configuration prevents different modules from maintaining inconsistent difficulty rules.
 
-Game mode determines how the game is played.
+### 8.9 Game Mode Configuration
 
-Current modes include:
+File:
+
+```text
+game/game_mode.py
+```
+
+The game mode module defines the rules or configuration associated with different styles of play.
+
+The documented modes are:
 
 ```text
 Classic
@@ -391,109 +624,218 @@ Endless
 Daily Challenge
 ```
 
-A player can therefore combine the two concepts:
+The exact behavior of each mode must be implemented and verified in the game systems.
+
+A mode may influence time limits, game progression, completion conditions, or whether saving is permitted.
+
+### 8.10 Renderer
+
+File:
 
 ```text
-Hard + Classic
-Easy + Timed
-Impossible + Timed
-Medium + Endless
+game/renderer.py
 ```
 
-This design makes the system extensible.
+The renderer is responsible for terminal presentation.
 
-Adding a new difficulty does not require creating a new game mode, and vice versa.
+It may display:
 
-## 9. Rendering Architecture
+- The current word.
+- Remaining lives.
+- Hangman artwork.
+- Player score.
+- Incorrect guesses.
+- Game instructions.
+- Victory and defeat screens.
+- Menus and status messages.
 
-The project separates game logic from presentation.
+The renderer should present the game state supplied by the engine. It should not independently decide whether the player has won or lost.
 
-The engine determines what is happening.
+## 9. Difficulty and Game Mode Separation
 
-The renderer determines how it looks.
+Difficulty and game mode represent separate concepts.
+
+### 9.1 Difficulty
+
+Difficulty controls how challenging a game is.
+
+For example:
+
+```text
+Easy + Classic
+Medium + Timed
+Hard + Classic
+Impossible + Timed
+```
+
+Difficulty may change the number of permitted mistakes, scoring rules, hints, or word selection.
+
+### 9.2 Game Mode
+
+Game mode controls the style or rules of the game.
+
+For example:
+
+- Classic may use standard hangman rules.
+- Timed may impose a time limit.
+- Endless may support continued play across multiple words.
+- Daily Challenge may provide a date-based challenge.
+
+These descriptions represent intended behavior. Each mode must be implemented before it can be considered functional.
+
+### 9.3 Independent Configuration
+
+The intended relationship is:
+
+```text
+Difficulty Configuration
+          |
+          v
+   Difficulty Settings
+          |
+          +------+
+                 |
+                 v
+              Engine
+                 ^
+                 |
+          +------+
+          |
+     Game Mode Settings
+          ^
+          |
+   Game Mode Configuration
+```
+
+Separating difficulty from game mode makes it possible to add a new difficulty without creating a new mode, and vice versa.
+
+## 10. Rendering Architecture
+
+The application separates gameplay state from terminal presentation.
 
 ```text
 Game State
-    ↓
+    |
+    v
   Engine
-    ↓
+    |
+    v
  Renderer
-    ↓
+    |
+    v
 Terminal Output
 ```
 
-For example, the engine may determine:
+The engine determines the state of the game. The renderer converts that state into readable terminal output.
+
+For example, the engine may maintain:
 
 ```text
-Score = 450
-Lives = 7
-Word = PYTHON
-Correct Letters = P, T
-```
-
-The renderer transforms that information into:
-
-```text
-Player: Anay
 Score: 450
-Lives: 7
-
-_ _ T _ _ _
+Remaining Lives: 7
+Secret Word: PYTHON
+Correct Guesses: P, T
 ```
 
-The renderer should not determine whether the player has actually won.
+The renderer may display the corresponding hidden word as:
 
-## 10. Assets Architecture
+```text
+Player: Example
+Score: 450
+Remaining Lives: 7
+
+P _ T _ _ _
+```
+
+The displayed values must be derived from the actual game state.
+
+### 10.1 Presentation Responsibilities
+
+The renderer should:
+
+- Format information consistently.
+- Display appropriate hangman frames.
+- Use terminal colors where supported.
+- Present clear prompts and messages.
+- Separate visual formatting from game rules.
+
+### 10.2 Terminal Compatibility
+
+Terminal colors and animations should not prevent the game from operating in environments with limited terminal capabilities.
+
+Presentation effects should be optional where necessary and should not alter gameplay logic.
+
+## 11. Assets Architecture
 
 The `assets/` directory contains static presentation resources.
 
 ```text
 assets/
+├── __init__.py
 ├── logo.txt
 ├── colors.py
 └── hangman_frames.py
 ```
 
-### Logo
+### 11.1 Logo
+
+File:
 
 ```text
-logo.txt
+assets/logo.txt
 ```
 
-Contains ASCII-art branding.
+Contains the application's ASCII-art branding.
 
-### Colors
+The banner or renderer can read and display this resource.
+
+### 11.2 Colors
+
+File:
 
 ```text
-colors.py
+assets/colors.py
 ```
 
-Provides terminal color/style constants.
+Provides terminal color and style constants.
 
-### Hangman Frames
+Centralizing these definitions avoids repeated escape sequences throughout the codebase.
+
+### 11.3 Hangman Frames
+
+File:
 
 ```text
-hangman_frames.py
+assets/hangman_frames.py
 ```
 
-Contains the visual stages of the hangman.
+Contains the visual stages of the hangman illustration.
 
-The assets layer is primarily consumed by the renderer.
+The renderer selects the appropriate frame based on the current gameplay state.
+
+### 11.4 Asset Usage
+
+The intended presentation flow is:
 
 ```text
 Assets
-   ↓
-Renderer
-   ↓
+   |
+   v
+Renderer / Banner
+   |
+   v
 Terminal
 ```
 
-## 11. Utility Architecture
+Assets should primarily provide presentation resources rather than implement gameplay rules.
 
-The `utils/` directory contains reusable support functionality.
+## 12. Utility Architecture
+
+The `utils/` directory contains reusable supporting functionality.
 
 ```text
 utils/
+├── __init__.py
 ├── helper.py
 ├── animations.py
 ├── constants.py
@@ -501,37 +843,81 @@ utils/
 └── file_manager.py
 ```
 
-### Helper
+### 12.1 Helper
 
-Provides reusable small functions.
-
-### Animations
-
-Provides terminal animation behavior.
-
-### Constants
-
-Provides shared application-wide configuration.
-
-### Banner
-
-Handles presentation of the ASCII logo.
-
-### FileManager
-
-Provides low-level file-system and JSON operations.
-
-The utilities should remain relatively independent from game-specific logic.
-
-## 12. Data Architecture
-
-Persistent resources are stored in:
+File:
 
 ```text
-data/
+utils/helper.py
 ```
 
-The data layer currently contains:
+Provides small, reusable helper functions.
+
+Helpers should remain general-purpose and should not become a second implementation of the game engine.
+
+### 12.2 Animations
+
+File:
+
+```text
+utils/animations.py
+```
+
+Provides terminal animation effects.
+
+Animations should be presentation-focused and should not control scoring or victory conditions.
+
+### 12.3 Constants
+
+File:
+
+```text
+utils/constants.py
+```
+
+Stores shared application constants, such as default values, common paths, or other configuration values that are genuinely shared.
+
+Game-specific difficulty and mode settings should remain in their corresponding game modules.
+
+### 12.4 Banner
+
+File:
+
+```text
+utils/banner.py
+```
+
+Provides functionality for displaying the application's banner or branding.
+
+It may use the logo resource in `assets/logo.txt`.
+
+### 12.5 FileManager
+
+File:
+
+```text
+utils/file_manager.py
+```
+
+Provides low-level file and JSON operations.
+
+Its documented operations include:
+
+- Loading text.
+- Saving text.
+- Loading JSON.
+- Saving JSON.
+- Checking file existence.
+- Deleting files.
+- Creating directories.
+- Checking file size.
+- Clearing file contents.
+
+The file manager should handle file operations without deciding what a saved game or statistic means.
+
+## 13. Data Architecture
+
+Persistent resources are stored in the `data/` directory.
 
 ```text
 data/
@@ -544,416 +930,548 @@ data/
     └── savegame.json
 ```
 
-### Word Databases
+### 13.1 Word Databases
 
-The four word files correspond to the four difficulty levels.
+The four word files correspond to the documented difficulty levels.
 
 ```text
-DifficultyManager
-       ↓
-DifficultySettings.word_file
-       ↓
+Difficulty Configuration
+          |
+          v
+Selected Difficulty
+          |
+          v
+Configured Word File
+          |
+          v
 WordManager
-       ↓
-JSON word database
+          |
+          v
+Selected Secret Word
 ```
 
-### Statistics
+Each JSON word database should follow the structure expected by `game/word_manager.py`.
+
+The actual JSON schema must be confirmed against the word manager implementation and data files.
+
+### 13.2 Statistics Data
+
+File:
 
 ```text
-Statistics
-     ↓
-FileManager
-     ↓
-statistics.json
+data/statistics.json
 ```
 
-### Save Data
+Stores persistent statistics when the application is configured to save them.
+
+The statistics component interprets the stored values, while the file manager performs the underlying file operations.
+
+### 13.3 Saved Game Data
+
+File:
 
 ```text
-SaveSystem
-     ↓
-FileManager
-     ↓
-savegame.json
-```
-
-## 13. Persistence Architecture
-
-The application separates high-level persistence logic from low-level file operations.
-
-### High-Level
-
-```text
-SaveSystem
-Statistics
-```
-
-These systems understand what the stored data means.
-
-### Low-Level
-
-```text
-FileManager
-```
-
-This system only understands how to interact with files.
-
-The relationship is:
-
-```text
-Game Logic
-    ↓
-SaveSystem / Statistics
-    ↓
-FileManager
-    ↓
-JSON Files
-```
-
-This separation prevents every game module from directly manipulating files.
-
-## 14. Save System Flow
-
-A typical save operation follows:
-
-```text
-Player Game
-    ↓
-Engine
-    ↓
-build_save_data()
-    ↓
-SaveSystem
-    ↓
-FileManager
-    ↓
 data/saves/savegame.json
 ```
 
-Loading reverses the process:
+Stores an active game's saved state when saving is supported and enabled.
+
+The save format should include every field required to reconstruct a valid game state.
+
+The schema should be consistent between saving, loading, and default-save creation.
+
+### 13.4 Data Validation
+
+Persistent JSON data may be missing, malformed, or incompatible with a newer version of the application.
+
+The responsible component should handle these conditions appropriately rather than allowing invalid data to silently corrupt gameplay.
+
+## 14. Persistence Architecture
+
+The persistence design separates high-level data management from low-level file access.
+
+### 14.1 High-Level Persistence
+
+The following components understand the meaning of stored information:
+
+```text
+SaveSystem
+Statistics
+WordManager
+```
+
+They determine what information is loaded or saved and how that information is used.
+
+### 14.2 Low-Level Persistence
+
+The file manager provides reusable file access:
+
+```text
+FileManager
+```
+
+It should not contain game-specific decisions about scores, victories, or saved gameplay state.
+
+### 14.3 Persistence Flow
+
+```text
+Game Components
+       |
+       v
+SaveSystem / Statistics / WordManager
+       |
+       v
+FileManager
+       |
+       v
+JSON Files
+```
+
+This separation reduces duplicated file-handling code and makes persistence behavior easier to test.
+
+## 15. Save System Flow
+
+### 15.1 Saving a Game
+
+A typical save operation follows this sequence:
+
+```text
+Active Game
+     |
+     v
+   Engine
+     |
+     v
+Build Save Data
+     |
+     v
+ SaveSystem
+     |
+     v
+ FileManager
+     |
+     v
+savegame.json
+```
+
+The engine gathers the current gameplay state. The save system manages the save structure, and the file manager writes the data.
+
+### 15.2 Loading a Game
+
+Loading follows the reverse direction:
 
 ```text
 savegame.json
-      ↓
-FileManager
-      ↓
-SaveSystem
-      ↓
-Engine
-      ↓
-Game State Restored
+     |
+     v
+ FileManager
+     |
+     v
+ SaveSystem
+     |
+     v
+   Engine
+     |
+     v
+Restore Game State
+     |
+     v
+Resume Gameplay
 ```
 
-The `SaveSystem` is responsible for interpreting the save structure.
+### 15.3 Save Consistency
 
-## 15. Statistics Flow
+The save schema must agree across:
 
-Statistics are handled separately from active game saves.
+- Default-save creation.
+- Save serialization.
+- Save loading.
+- Engine state restoration.
+- Tests covering save and load behavior.
+
+If the engine expects fields that the save system does not create or preserve, loading may fail or restore an incomplete state.
+
+Save and load behavior should therefore be tested as a complete round trip.
+
+## 16. Statistics Flow
+
+Statistics are separate from active game saves.
+
+A typical completed-game flow is:
 
 ```text
-Game Ends
-    ↓
-Engine
-    ↓
-Statistics.record_completed_game()
-    ↓
-Statistics.save()
-    ↓
-FileManager
-    ↓
+Game Completes
+      |
+      v
+    Engine
+      |
+      v
+Statistics Component
+      |
+      v
+Record Result
+      |
+      v
+Persist Statistics
+      |
+      v
+  FileManager
+      |
+      v
 statistics.json
 ```
 
-This means an unfinished game and long-term player statistics are treated as different types of persistent information.
+The statistics component should update the appropriate records when a game is completed.
 
-## 16. Gameplay Flow
+The application should avoid recording the same completed game multiple times if the completion logic can be reached repeatedly.
 
-A complete gameplay session can be represented as:
+Unfinished game state and long-term performance statistics should remain separate concepts.
+
+## 17. Gameplay Flow
+
+A complete gameplay session follows the intended sequence below:
 
 ```text
 Application Starts
-       ↓
+        |
+        v
       main.py
-       ↓
-     Engine
-       ↓
-Player Configuration
-       ↓
-Difficulty Selection
-       ↓
-Game Mode Selection
-       ↓
-Word Selection
-       ↓
-Timer Starts
-       ↓
-Gameplay Loop
-       ↓
-Render Screen
-       ↓
-Receive Guess
-       ↓
-Validate Guess
-       ↓
-Check Word
-       ↓
-Update Score / Lives / Letters
-       ↓
-Render Updated State
-       ↓
-Check Win / Loss
-       ↓
-     ┌───────────────┐
-     │               │
-   Continue        Game Ends
-     │               │
-     └───→ Loop      ▼
-                 Finalize
-                    ↓
-             Update Player
-                    ↓
-             Record Statistics
-                    ↓
-              Save Statistics
-                    ↓
-              Result Screen
+        |
+        v
+  Initialize Engine
+        |
+        v
+ Player Configuration
+        |
+        v
+ Difficulty Selection
+        |
+        v
+ Game Mode Selection
+        |
+        v
+   Select Word
+        |
+        v
+ Initialize Game State
+        |
+        v
+ Start Timer if Required
+        |
+        v
+    Gameplay Loop
+        |
+        v
+   Render Current State
+        |
+        v
+ Receive Player Guess
+        |
+        v
+  Validate Player Input
+        |
+        v
+  Process Valid Guess
+        |
+        v
+ Update Game State
+        |
+        v
+ Check Victory / Defeat / Timeout
+        |
+        +----------------------+
+        |                      |
+        v                      v
+ Continue Playing          Game Ends
+        |                      |
+        |                      v
+        |                Finalize Result
+        |                      |
+        |                      v
+        |                Update Player
+        |                      |
+        |                      v
+        |                Record Statistics
+        |                      |
+        |                      v
+        |                Display Result
+        |                      |
+        +----------------------+
 ```
 
-## 17. Guess Processing Flow
+The precise sequence may differ according to game mode and the implemented engine behavior.
 
-A player's guess follows a specific pipeline:
+## 18. Guess Processing Flow
+
+Each guess should pass through a consistent processing pipeline.
 
 ```text
 Player
-  ↓
-Renderer.prompt_guess()
-  ↓
-Engine.get_player_guess()
-  ↓
+  |
+  v
+Receive Guess
+  |
+  v
 Validator
-  ↓
-Valid Guess
-  ↓
-Engine.process_guess()
-  ↓
-Correct? ──────────────┐
-  │                    │
- Yes                   No
-  ↓                    ↓
-Correct Letters     Wrong Letters
-  ↓                    ↓
-Update Display      Lose Life
-  ↓                    ↓
-Update Score        Advance Hangman
-  └──────────┬─────────┘
-             ↓
-       Update Game State
-             ↓
-      Check Win / Defeat
+  |
+  v
+Input Valid?
+  |
+  +-------------------+
+  |                   |
+  v                   v
+   No                 Yes
+   |                   |
+   v                   v
+Show Error       Process Guess
+                       |
+                       v
+                  Guess Correct?
+                   /        \
+                  /          \
+                 v            v
+               Yes            No
+                |              |
+                v              v
+        Record Correct    Record Incorrect
+             Guess             Guess
+                |              |
+                v              v
+         Update Display   Update Lives
+                |              |
+                +------+-------+
+                       |
+                       v
+                Update Game State
+                       |
+                       v
+                Update Score
+                       |
+                       v
+              Check End Conditions
+                       |
+                       v
+                 Render State
 ```
 
-This keeps validation, gameplay processing, scoring, and presentation conceptually separate.
+The implementation should ensure that each guess updates the game state exactly once.
 
-## 18. Victory Flow
+Correct guesses should not be recorded or scored twice because the same processing path is invoked redundantly.
 
-When the player completes the word:
+Repeated guesses should follow one consistent policy, such as rejecting the guess without applying an additional score or life change.
+
+## 19. Victory Flow
+
+When the player correctly reveals the entire word, the engine should finalize the victory.
 
 ```text
-Word Complete
-     ↓
-is_game_won()
-     ↓
-finish_victory()
-     ↓
-Calculate Completion Score
-     ↓
-Calculate Final Score
-     ↓
-Stop Game
-     ↓
-Update Player Profile
-     ↓
-Record Statistics
-     ↓
-Save Statistics
-     ↓
-Victory Screen
+Word Completely Revealed
+          |
+          v
+     Check Victory
+          |
+          v
+    Finalize Victory
+          |
+          v
+ Calculate Final Score
+          |
+          v
+   Stop Game Timer
+          |
+          v
+ Update Player Profile
+          |
+          v
+ Record Game Statistics
+          |
+          v
+ Persist Statistics
+          |
+          v
+   Display Victory Screen
 ```
 
-The engine coordinates the process while individual systems perform their specialized responsibilities.
+The engine coordinates the sequence, while the scoring, player, statistics, timer, and renderer components perform their specialized tasks.
 
-## 19. Defeat Flow
+Completion logic should be protected against repeated execution so that the same game is not finalized more than once.
 
-When the player runs out of lives:
+## 20. Defeat and Timeout Flow
+
+A game may end when the player exhausts the permitted mistakes or when a configured time limit expires.
+
+### 20.1 Defeat by Incorrect Guesses
 
 ```text
-Lives Exhausted
-      ↓
-is_game_over()
-      ↓
-finish_defeat()
-      ↓
-Reveal Word
-      ↓
-Stop Game
-      ↓
-Update Player Profile
-      ↓
-Record Statistics
-      ↓
-Save Statistics
-      ↓
-Game Over Screen
+Permitted Mistakes Exhausted
+            |
+            v
+       Check Defeat
+            |
+            v
+       Finalize Defeat
+            |
+            v
+        Reveal Word
+            |
+            v
+       Stop Game Timer
+            |
+            v
+      Update Player Data
+            |
+            v
+      Record Statistics
+            |
+            v
+      Persist Statistics
+            |
+            v
+      Display Game Over
 ```
 
-## 20. Dependency Direction
-
-The preferred dependency direction is:
+### 20.2 Defeat by Timeout
 
 ```text
-main.py
-   ↓
-game/
-   ↓
-utils/
-   ↓
-Python Standard Library
+Time Limit Reached
+        |
+        v
+   Detect Timeout
+        |
+        v
+   Finalize Result
+        |
+        v
+   Stop Game Timer
+        |
+        v
+   Record Statistics
+        |
+        v
+   Display Result
 ```
 
-The data and assets directories provide resources consumed by the appropriate systems.
+The engine must define how timeout interacts with victory and other end conditions.
 
-A simplified model is:
+Only one terminal result should be recorded for a single game session.
+
+## 21. Dependency Direction
+
+The preferred dependency direction is from higher-level application coordination toward specialized systems and lower-level utilities.
 
 ```text
-          main.py
-             ↓
-           game/
-             ↓
-           utils/
-             ↓
-     Standard Library
+Application Entry Point
+          |
+          v
+       Game Layer
+          |
+          v
+     Utility Layer
+          |
+          v
+ Python Standard Library
 ```
 
-The project should avoid unnecessary reverse dependencies.
+The assets and data directories provide resources consumed by the appropriate modules.
 
-For example, `utils/file_manager.py` should not depend on `game/engine.py`.
+This diagram represents a general design guideline, not a claim that every module currently imports only the layer immediately below it.
 
-## 21. Dependency Responsibilities
+### 21.1 Dependency Rules
 
-A useful dependency map is:
+- `main.py` may coordinate the engine and application menus.
+- The engine may depend on specialized game components.
+- Game components may use reusable utility functions.
+- Persistence components may use the file manager.
+- The renderer may use presentation assets and utilities.
+- Generic utility modules should not import the engine.
+- Lower-level modules should not depend on higher-level application control.
 
-```text
-Engine
- ├── Player
- ├── WordManager
- ├── Validator
- ├── ScoreBoard
- ├── Statistics
- ├── SaveSystem
- ├── GameTimer
- ├── Difficulty
- ├── GameMode
- └── Renderer
+### 21.2 Avoid Circular Dependencies
 
-Renderer
- ├── Colors
- ├── HangmanFrames
- ├── Animation
- ├── Banner
- ├── Constants
- └── Helper
+Circular imports make initialization harder to understand and can create runtime errors.
 
-SaveSystem
- └── FileManager
+For example, `utils/file_manager.py` should not import `game/engine.py`.
 
-Statistics
- └── FileManager
+If two modules require shared functionality, move that functionality into an appropriate lower-level module rather than making each module import the other.
 
-WordManager
- └── FileManager
-```
+## 22. Dependency Responsibilities
 
-The exact implementation dependencies may evolve, but the architectural principle should remain the same.
+The following table describes the intended dependency relationships.
 
-## 22. Separation of Responsibilities
+| Component | Main collaborators |
+|---|---|
+| `main.py` | Engine and application-level functionality |
+| `Engine` | Player, WordManager, Validator, ScoreBoard, Statistics, SaveSystem, GameTimer, difficulty, game mode, Renderer |
+| `Renderer` | Assets and presentation utilities |
+| `WordManager` | FileManager and word data |
+| `SaveSystem` | FileManager and save data |
+| `Statistics` | FileManager and statistics data |
+| `GameTimer` | Standard-library time functionality or an equivalent timing mechanism |
+| `DifficultyManager` | Difficulty settings |
+| `GameModeManager` | Game mode settings |
+| `FileManager` | Python file and JSON functionality |
+| `Banner` | Logo resource and presentation utilities |
 
-One of the most important principles in the project is **single responsibility**.
+The exact dependencies must be confirmed against the current source code.
 
-Each module should have one primary reason to change.
+The objective is to keep dependencies explicit and avoid unnecessary coupling.
 
-| Component           | Primary Responsibility            |
-| ------------------- | --------------------------------- |
-| `main.py`           | Start application                 |
-| `Engine`            | Coordinate gameplay               |
-| `Player`            | Store player information          |
-| `WordManager`       | Manage words                      |
-| `Validator`         | Validate input                    |
-| `ScoreBoard`        | Calculate scores                  |
-| `Statistics`        | Track long-term statistics        |
-| `SaveSystem`        | Manage game saves                 |
-| `Timer`             | Track time                        |
-| `DifficultyManager` | Manage difficulty                 |
-| `GameModeManager`   | Manage game modes                 |
-| `Renderer`          | Display interface                 |
-| `FileManager`       | Perform file operations           |
-| `Animation`         | Perform terminal animations       |
-| `Banner`            | Display banner                    |
-| `Helper`            | Provide reusable helper functions |
+## 23. Separation of Responsibilities
 
-## 23. Why the Architecture Is Modular
+Each component should have one primary reason to change.
 
-A monolithic implementation could place everything into a single file:
+| Component | Primary responsibility |
+|---|---|
+| `main.py` | Start and coordinate the application |
+| `Engine` | Orchestrate gameplay |
+| `Player` | Maintain player-specific state |
+| `WordManager` | Manage word selection and word data |
+| `Validator` | Validate player input |
+| `ScoreBoard` | Calculate scoring changes |
+| `Statistics` | Maintain long-term performance records |
+| `SaveSystem` | Manage saved game state |
+| `GameTimer` | Track gameplay time |
+| `DifficultyManager` | Manage difficulty configuration |
+| `GameModeManager` | Manage game mode configuration |
+| `Renderer` | Present game state in the terminal |
+| `FileManager` | Perform low-level file operations |
+| `Animations` | Provide terminal animation effects |
+| `Banner` | Display application branding |
+| `Helper` | Provide reusable helper functions |
+| `Assets` | Supply static presentation resources |
 
-```text
-Game
- ├── input
- ├── validation
- ├── scoring
- ├── saving
- ├── statistics
- ├── rendering
- ├── words
- └── timing
-```
+This separation makes individual modules easier to test, understand, and maintain.
 
-However, this would become difficult to maintain as the project grows.
+## 24. Why the Architecture Is Modular
 
-The modular design instead creates:
+A monolithic implementation could place input handling, validation, scoring, saving, statistics, word selection, rendering, and timing in one file.
 
-```text
-Engine
- ├── Validator
- ├── ScoreBoard
- ├── WordManager
- ├── SaveSystem
- ├── Statistics
- ├── Timer
- └── Renderer
-```
+As the application grows, this approach makes it harder to locate bugs and safely modify existing functionality.
 
-Advantages include:
+The modular architecture instead assigns these responsibilities to separate components coordinated by the engine.
 
-* Easier testing.
-* Easier debugging.
-* Better readability.
-* Lower coupling.
-* Easier feature additions.
-* Clearer responsibilities.
-* Reduced code duplication.
-* Easier future refactoring.
+### 24.1 Benefits
 
-## 24. Testing Architecture
+- Easier debugging.
+- Better code readability.
+- Lower coupling between systems.
+- More focused automated tests.
+- Reduced duplication of business logic.
+- Clearer ownership of game state.
+- Simpler feature additions.
+- More manageable future refactoring.
+
+### 24.2 Avoiding Over-Engineering
+
+Modularity should remain practical.
+
+A separate module or class is useful when it provides a clear responsibility, reusable behavior, or a meaningful testing boundary.
+
+Small, unrelated helpers do not need additional architectural layers without a concrete benefit.
+
+## 25. Testing Architecture
 
 Automated tests are stored in:
-
-```text
-tests/
-```
-
-Tests are separated from production code.
-
-Current test modules include:
 
 ```text
 tests/
@@ -965,71 +1483,102 @@ tests/
 └── test_statistics.py
 ```
 
-The tests focus primarily on game logic rather than requiring the entire application to run interactively.
+Tests should verify the behavior of production modules without requiring the entire application to run interactively.
 
-### Testing Philosophy
+### 25.1 Test Responsibilities
 
-Individual modules should be tested independently where possible.
+| Test module | Primary focus |
+|---|---|
+| `test_engine.py` | Game state, guess processing, and game flow |
+| `test_player.py` | Player data and player-related operations |
+| `test_validator.py` | Input validation and invalid input |
+| `test_word_manager.py` | Word loading and word selection |
+| `test_scoreboard.py` | Scoring calculations |
+| `test_statistics.py` | Statistics updates and persistence behavior |
+
+The exact test coverage depends on the implemented test cases.
+
+### 25.2 Unit Testing
+
+Individual modules should be tested independently whenever possible.
 
 For example:
 
 ```text
 Validator
-    ↓
+    |
+    v
 test_validator.py
 ```
 
 ```text
 ScoreBoard
-    ↓
+    |
+    v
 test_scoreboard.py
 ```
 
 ```text
 WordManager
-    ↓
+    |
+    v
 test_word_manager.py
 ```
 
-The engine can then be tested as the coordinator of these systems.
+Unit tests should cover expected results, invalid inputs, boundary conditions, and failure scenarios.
 
-## 25. Mocking and Isolation
+### 25.3 Integration Testing
 
-Some game systems interact with external resources or interactive functionality.
+Unit tests alone cannot establish that the complete application works correctly.
+
+Integration tests should verify interactions between:
+
+- The application and engine.
+- The engine and renderer.
+- The engine and validator.
+- The engine and word manager.
+- The engine and scoring system.
+- The engine and save system.
+- The engine and statistics.
+- The persistence components and JSON files.
+
+A successful end-to-end test should confirm that the application can start, complete a game, handle a result, and persist supported data without errors.
+
+## 26. Mocking and Isolation
+
+Some components interact with external or environment-dependent behavior.
 
 Examples include:
 
-* Terminal input.
-* Terminal output.
-* File operations.
-* Timers.
-* Random word selection.
+- Terminal input.
+- Terminal output.
+- File operations.
+- Timers.
+- Random word selection.
+- Animation delays.
 
-Tests can isolate these dependencies using mocking where appropriate.
+Tests can replace these dependencies with controlled mock objects or test fixtures.
 
-The goal is to test the behavior of the component itself rather than accidentally testing unrelated systems.
+For example, a test verifying that a correct guess updates the score should not need to wait for a real animation or read input from a physical keyboard.
 
-For example, an engine test should be able to verify:
+### 26.1 Recommended Test Practices
 
-```text
-"Correct guess increases score"
-```
+- Use temporary files for persistence tests.
+- Mock random selection when testing deterministic behavior.
+- Replace interactive input with controlled test values.
+- Avoid unnecessary sleep calls in automated tests.
+- Reset shared state between tests.
+- Verify that invalid input does not corrupt game state.
+- Verify that saved data can be loaded back into a valid state.
 
-without requiring a real terminal animation to run.
-
-## 26. Documentation Architecture
+## 27. Documentation Architecture
 
 Technical documentation is stored in:
 
 ```text
 docs/
-```
-
-The documentation layer mirrors the project's major components.
-
-```text
-docs/
 ├── architecture.md
+├── main.md
 ├── game.md
 ├── utils.md
 ├── assets.md
@@ -1037,126 +1586,163 @@ docs/
 └── tests.md
 ```
 
-### Purpose of Each Document
+Each document focuses on a particular part of the project.
 
-| Document          | Purpose                      |
-| ----------------- | ---------------------------- |
-| `architecture.md` | Overall project architecture |
-| `game.md`         | Game-layer documentation     |
-| `utils.md`        | Utility-layer documentation  |
-| `assets.md`       | Static asset documentation   |
-| `data.md`         | Data-file documentation      |
-| `tests.md`        | Testing documentation        |
+| Document | Purpose |
+|---|---|
+| `architecture.md` | Overall structure, layers, and component relationships |
+| `main.md` | Application entry point and menu flow |
+| `game.md` | Game systems and gameplay responsibilities |
+| `utils.md` | Shared utility functions and file operations |
+| `assets.md` | Static resources and terminal presentation assets |
+| `data.md` | Word databases, statistics, and saved game data |
+| `tests.md` | Test organization and verification practices |
 
-This allows developers to understand either the entire project or a specific area without reading every source file.
+Documentation should be updated when module responsibilities, public methods, file formats, or architectural dependencies change.
 
-## 27. Error Handling Architecture
+Documentation describes the intended design, but it should not be treated as proof that a feature has been implemented or tested.
 
-Errors should be handled at the appropriate level.
+## 28. Error Handling Architecture
 
-Low-level modules should report or raise errors relevant to their own responsibilities.
+Errors should be handled at the level that understands how to respond to them.
 
-For example:
+### 28.1 File-Related Errors
 
-```text
-FileManager
-    ↓
-File-related error
-```
+The file manager should handle or report errors related to reading, writing, deleting, or creating files.
 
-while:
+Examples include:
 
-```text
-Validator
-    ↓
-Invalid input
-```
+- Missing files.
+- Invalid JSON.
+- Permission errors.
+- Invalid paths.
+- Failed write operations.
 
-The engine can then decide how the application should respond.
+Higher-level components can then decide whether to create defaults, retry, display a message, or stop the affected operation.
 
-This prevents low-level utilities from making high-level gameplay decisions.
+### 28.2 Input-Related Errors
 
-## 28. Configuration Architecture
+The validator should identify invalid player input and provide a predictable result.
 
-Configuration is distributed according to responsibility.
+Invalid input should not unexpectedly alter the player's score, remaining lives, or current word.
 
-### Application-Wide Configuration
+### 28.3 Gameplay Errors
 
-Stored in:
+The engine should handle gameplay-level decisions, such as whether a game can continue after a particular condition.
+
+It should avoid treating every unexpected error as an ordinary incorrect guess.
+
+### 28.4 Error Handling Principles
+
+- Handle expected errors explicitly.
+- Avoid silently discarding important failures.
+- Provide useful messages to the user.
+- Keep low-level utilities independent of gameplay decisions.
+- Preserve valid state when an operation fails.
+- Test important failure scenarios.
+
+## 29. Configuration Architecture
+
+Configuration belongs in the module responsible for the behavior it controls.
+
+### 29.1 Application-Wide Constants
+
+File:
 
 ```text
 utils/constants.py
 ```
 
-### Difficulty Configuration
+Contains values shared across the application, such as default names and reusable configuration constants.
 
-Stored in:
+### 29.2 Difficulty Configuration
 
-```text
-game/difficulty.py
-```
-
-### Game Mode Configuration
-
-Stored in:
-
-```text
-game/game_mode.py
-```
-
-This prevents one large configuration file from becoming responsible for unrelated settings.
-
-## 29. Extensibility
-
-The architecture is designed so new features can be added without rewriting the entire project.
-
-### Adding a New Difficulty
-
-Modify:
+File:
 
 ```text
 game/difficulty.py
 ```
 
-and provide:
+Contains difficulty levels and their associated settings.
 
-* New enum value.
-* New settings.
-* New word database.
+### 29.3 Game Mode Configuration
 
-### Adding a New Game Mode
-
-Modify:
+File:
 
 ```text
 game/game_mode.py
 ```
 
-and implement the required behavior through the engine.
+Contains game mode definitions and their settings.
 
-### Adding New Words
+### 29.4 Data File Configuration
 
-Add or modify the appropriate JSON data file.
+Word database paths, statistics paths, and save paths should be defined or resolved consistently.
 
-### Adding a New Visual Effect
+Path handling should not depend unnecessarily on the current working directory. Where appropriate, use paths derived from the project location or a centralized configuration.
 
-Modify:
+## 30. Extensibility
+
+The architecture allows new functionality to be added through the appropriate components.
+
+### 30.1 Adding a Difficulty
+
+Update:
+
+```text
+game/difficulty.py
+```
+
+Depending on the implementation, this may require:
+
+- Adding a difficulty enum value.
+- Defining its settings.
+- Providing a word database.
+- Updating selection or validation logic where needed.
+- Adding corresponding tests.
+- Updating documentation.
+
+### 30.2 Adding a Game Mode
+
+Update:
+
+```text
+game/game_mode.py
+```
+
+Implement the mode's behavior in the appropriate gameplay components.
+
+Also review timer handling, game progression, save behavior, menus, tests, and documentation as applicable.
+
+Adding an enum value alone does not implement a complete game mode.
+
+### 30.3 Adding Words
+
+Add or modify the appropriate JSON word database.
+
+Ensure that the data follows the format expected by `game/word_manager.py`.
+
+### 30.4 Adding a Visual Effect
+
+Update:
 
 ```text
 utils/animations.py
 ```
 
-and use it from the renderer.
+Connect the effect to the renderer without making the animation responsible for gameplay decisions.
 
-### Adding a New Screen
+### 30.5 Adding a New Screen
 
-Add the appropriate rendering method to:
+Update the appropriate methods in:
 
 ```text
 game/renderer.py
 ```
 
-### Adding a New Persistent Field
+If the screen introduces new application navigation, update `main.py` as well.
+
+### 30.6 Adding a Persistent Field
 
 Update the save structure in:
 
@@ -1164,168 +1750,256 @@ Update the save structure in:
 game/save_system.py
 ```
 
-and update the associated tests.
+Also review engine serialization and restoration, default values, backward compatibility where required, and associated tests.
 
-## 30. Architectural Rules
+### 30.7 Adding a New Statistic
+
+Update the statistics component, its persisted data structure, the appropriate game-completion flow, and the corresponding tests.
+
+## 31. Architectural Rules
 
 The following rules should be maintained as the project evolves.
 
-### Rule 1 — Keep Gameplay in `game/`
+### Rule 1 — Keep Application Startup in `main.py`
 
-Game-specific behavior belongs in the `game/` package.
+The entry point should initialize and coordinate the application rather than duplicate gameplay logic.
 
-### Rule 2 — Keep Generic Functionality in `utils/`
+### Rule 2 — Keep Game-Specific Logic in `game/`
 
-Reusable functionality belongs in `utils/`.
+Game rules and game-specific state belong in the game package.
 
-### Rule 3 — Keep Static Resources in `assets/`
+### Rule 3 — Keep Generic Functionality in `utils/`
 
-ASCII artwork and visual constants belong in `assets/`.
+Reusable utility functions should not depend on high-level gameplay components.
 
-### Rule 4 — Keep Persistent Data in `data/`
+### Rule 4 — Keep Static Visual Resources in `assets/`
 
-Word lists, statistics, and save data belong in `data/`.
+ASCII artwork, terminal colors, and similar presentation resources belong in the assets package.
 
-### Rule 5 — Keep Tests in `tests/`
+### Rule 5 — Keep Persistent Files in `data/`
 
-Automated tests should not be mixed with production modules.
+Word databases, statistics, and saved game files should remain in the designated data directory.
 
-### Rule 6 — Keep Documentation in `docs/`
+### Rule 6 — Keep Automated Tests in `tests/`
 
-Technical documentation should remain separate from executable code.
+Tests should remain separate from production modules.
 
-### Rule 7 — Avoid Circular Dependencies
+### Rule 7 — Keep Technical Documentation in `docs/`
 
-Modules should depend on lower-level or peer systems only when necessary.
+Architecture and module documentation should remain separate from executable code.
 
-### Rule 8 — Avoid Duplicated Business Logic
+### Rule 8 — Avoid Circular Dependencies
 
-If a rule already belongs to a dedicated system, other modules should call that system instead of reimplementing the rule.
+Modules should not depend on each other in a way that creates circular imports.
 
-### Rule 9 — Keep the Engine as an Orchestrator
+### Rule 9 — Avoid Duplicated Business Logic
 
-The engine coordinates systems rather than becoming a giant collection of unrelated utility functions.
+A rule owned by a specialized component should not be independently reimplemented throughout the engine.
 
-### Rule 10 — Update Tests With Behavior Changes
+### Rule 10 — Keep the Engine Focused on Orchestration
 
-Whenever a module's behavior changes, its corresponding tests should be reviewed and updated.
+The engine should coordinate systems rather than becoming a collection of unrelated utilities.
 
-## 31. Overall Architecture Diagram
+### Rule 11 — Keep Save and Load Schemas Consistent
 
-The entire application can be summarized as:
+Save creation, serialization, and restoration should agree on required fields and valid state.
+
+### Rule 12 — Update Tests When Behavior Changes
+
+Changes to gameplay rules, data formats, and module interfaces should trigger a review of the corresponding tests.
+
+### Rule 13 — Keep Documentation Synchronized
+
+Changes to the directory structure, module responsibilities, or supported game modes should be reflected in the documentation.
+
+### Rule 14 — Verify Integration Before Release
+
+A modular codebase is not complete merely because its individual files exist. Imports, method calls, data formats, and end-to-end behavior must work together.
+
+## 32. Integration and Consistency Checks
+
+Before considering the architecture fully implemented, verify the following areas.
+
+### 32.1 Game Mode Consistency
+
+The game mode enum, application menus, engine configuration, and game mode manager must use the same supported mode names.
+
+The documented modes are:
+
+```text
+CLASSIC
+TIMED
+ENDLESS
+DAILY
+```
+
+If another name, such as `SURVIVAL`, appears in application code, either implement it consistently or change the application to use a supported mode.
+
+### 32.2 Application Method Consistency
+
+Every method called by `main.py` must exist on the relevant object or be replaced with the correct implemented interface.
+
+For example, leaderboard functionality should not be called through the engine unless the corresponding method is implemented.
+
+### 32.3 Save Schema Consistency
+
+Check that:
+
+- Default saves contain the fields expected by the engine.
+- Saving writes all necessary state.
+- Loading handles missing or malformed data.
+- A saved game can be restored without missing-key errors.
+- The restored state behaves correctly when play resumes.
+
+### 32.4 Guess Processing Consistency
+
+Verify that each guess updates the game state once.
+
+Correct letters, incorrect guesses, scoring, remaining lives, and victory or defeat checks should not be updated redundantly.
+
+### 32.5 Game Completion Consistency
+
+Victory, defeat, and timeout should lead to a single completed-game result.
+
+Statistics and final scoring should not be recorded more than once for the same game.
+
+### 32.6 Data Path Consistency
+
+Verify that the word manager, save system, statistics component, and file manager resolve paths consistently regardless of the directory from which the application is launched.
+
+### 32.7 Test and Runtime Consistency
+
+Run the automated tests and manually exercise the main application flows.
+
+A successful test run is evidence of the tested behavior, not proof that every possible runtime path is correct.
+
+## 33. Overall Architecture Diagram
+
+The following diagram summarizes the major components and their intended relationships.
 
 ```text
                          Advanced Hangman
-                                │
-                                ▼
+                                |
+                                v
                              main.py
-                                │
-                                ▼
-                         ┌──────────────┐
-                         │    Engine    │
-                         └──────┬───────┘
-                                │
-       ┌────────────────────────┼─────────────────────────┐
-       │            │           │           │             │
-       ▼            ▼           ▼           ▼             ▼
-    Player      WordManager  Validator  ScoreBoard     Timer
-       │            │           │           │             │
-       └────────────┴───────────┴───────────┴─────────────┘
-                                │
-                 ┌──────────────┼──────────────┐
-                 │                             │
-                 ▼                             ▼
-             Statistics                   SaveSystem
-                 │                             │
-                 │                             ▼
-                 │                       FileManager
-                 │                             │
-                 └──────────────┬──────────────┘
-                                ▼
-                              data/
-                                │
-        ┌───────────────────────┼───────────────────────┐
-        │                       │                       │
-        ▼                       ▼                       ▼
-   Word JSONs             statistics.json        savegame.json
+                                |
+                                v
+                       +------------------+
+                       |      Engine      |
+                       +------------------+
+                                |
+             +------------------+------------------+
+             |                  |                  |
+             v                  v                  v
+           Player           WordManager         Validator
+             |                  |                  |
+             +------------------+------------------+
+                                |
+                 +--------------+--------------+
+                 |              |              |
+                 v              v              v
+             ScoreBoard      GameTimer       Renderer
+                 |                             |
+                 |                             v
+                 |                        Terminal UI
+                 |
+                 +------------------+
+                                    |
+                       +------------+------------+
+                       |                         |
+                       v                         v
+                  Statistics                 SaveSystem
+                       |                         |
+                       +------------+------------+
+                                    |
+                                    v
+                                FileManager
+                                    |
+                                    v
+                                   data/
+                                    |
+                     +--------------+--------------+
+                     |              |              |
+                     v              v              v
+                 Word JSONs    statistics.json  savegame.json
 
 
-                         Engine
-                           │
-             ┌─────────────┴─────────────┐
-             ▼                           ▼
-       Difficulty                  GameMode
-       Manager                     Manager
-             │                           │
-             └─────────────┬─────────────┘
-                           ▼
+              Presentation and Shared Support
+                           |
+                +----------+----------+
+                |                     |
+                v                     v
+             assets/                utils/
+                |                     |
+                +----------+----------+
+                           |
+                           v
                         Renderer
-                           │
-             ┌─────────────┼─────────────┐
-             ▼             ▼             ▼
-          Assets        Animations      Helpers
-             │
-             ▼
-          Terminal
 
 
-                         Tests
-                           │
-             ┌─────────────┼─────────────┐
-             ▼             ▼             ▼
-          Engine       Validator      Player
-             │
-             ├── WordManager
-             ├── ScoreBoard
-             └── Statistics
+                       Verification
+                           |
+                           v
+                         tests/
+
+
+                       Documentation
+                           |
+                           v
+                          docs/
 ```
 
-## 32. Final Architectural Summary
+This is a conceptual diagram of the system. The exact call relationships and dependency graph should be confirmed from the implementation.
 
-Advanced Hangman uses a modular architecture centered around a coordinating game engine.
+## 34. Final Architectural Summary
 
-The architecture can be summarized as:
+Advanced Hangman is organized around a central gameplay engine supported by specialized game components and reusable utilities.
+
+The intended application flow is:
 
 ```text
 main.py
-   ↓
+   |
+   v
 Engine
-   ↓
+   |
+   v
 Specialized Game Systems
-   ↓
-Utilities / Resources
-   ↓
+   |
+   v
+Utilities and Resources
+   |
+   v
 Persistent Data
 ```
 
-The major design principle is **separation of concerns**.
-
-The engine controls the flow of the game, but specialized classes handle individual responsibilities:
+The engine coordinates the game, while individual components have clearly defined responsibilities.
 
 ```text
-Player       → Player information
-WordManager  → Words
-Validator    → Input validation
-ScoreBoard   → Scoring
-Statistics   → Long-term statistics
-SaveSystem   → Game persistence
-Timer        → Time tracking
-Difficulty   → Difficulty configuration
-GameMode     → Game-mode configuration
-Renderer     → Terminal presentation
+Player        -> Player information
+WordManager   -> Word selection and word data
+Validator     -> Input validation
+ScoreBoard    -> Scoring
+Statistics    -> Long-term performance records
+SaveSystem    -> Saved game state
+GameTimer     -> Time tracking
+Difficulty    -> Difficulty configuration
+GameMode      -> Game mode configuration
+Renderer      -> Terminal presentation
+FileManager   -> Low-level file operations
 ```
 
-The supporting layers provide:
+The supporting directories provide:
 
 ```text
-assets/      → Static visual resources
-utils/       → Reusable utilities
-data/        → Persistent data
-tests/       → Automated verification
-docs/        → Technical documentation
+assets/  -> Static visual resources
+utils/   -> Reusable utility functionality
+data/    -> Word databases and persistent information
+tests/   -> Automated verification
+docs/    -> Technical documentation
 ```
 
-This architecture provides a strong foundation for expanding Advanced Hangman while keeping the codebase understandable and maintainable.
+The main architectural principle is separation of concerns. Each module should have a clear responsibility, dependencies should remain manageable, and data should move between components through consistent interfaces.
 
-The project can therefore grow by adding or modifying individual systems instead of repeatedly rewriting the entire application.
+This structure provides a maintainable foundation for future development. Its effectiveness ultimately depends on keeping the implementation, tests, data formats, and documentation synchronized.
 
