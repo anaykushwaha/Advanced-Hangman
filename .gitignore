@@ -1,3 +1,4 @@
+
 # Advanced Hangman
 # .gitignore
 
@@ -16,6 +17,9 @@ __pycache__/
 .pytype/
 .tox/
 .nox/
+.hypothesis/
+.dmypy.json
+dmypy.json
 
 # Virtual Environments
 .venv/
@@ -27,11 +31,12 @@ venv.bak/
 
 # IDE / Editor Settings
 .vscode/
+.vscode-test/
 .idea/
+.history/
 *.swp
 *.swo
 *~
-.vscode-test/
 
 # Visual Studio
 .vs/
@@ -41,6 +46,13 @@ venv.bak/
 .DS_Store?
 Thumbs.db
 desktop.ini
+$RECYCLE.BIN/
+.Trashes/
+.Spotlight-V100/
+.fseventsd/
+.AppleDouble
+.LSOverride
+*.lnk
 
 # Coverage Reports
 .coverage
@@ -48,7 +60,8 @@ desktop.ini
 htmlcov/
 coverage.xml
 *.cover
-.pytest_cache/
+test-results/
+junit.xml
 
 # Build / Distribution
 build/
@@ -62,15 +75,16 @@ lib64/
 parts/
 sdist/
 wheels/
-
+pip-wheel-metadata/
 *.egg-info/
 *.egg
-pip-wheel-metadata/
 
 # Python Packaging
 pip-log.txt
 pip-delete-this-directory.txt
 pip-uninstall.log
+MANIFEST
+MANIFEST.in.bak
 
 # Logs
 *.log
@@ -83,11 +97,24 @@ logs/
 *.backup
 *.old
 *.orig
+*.rej
+*.swp
+*.swo
 
 # Environment Variables / Secrets
 .env
 .env.*
 !.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+credentials.json
+secrets.json
+secrets.yaml
+secrets.yml
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -99,13 +126,7 @@ logs/
 # Profiling / Performance
 *.prof
 *.lprof
-
-# Test Artifacts
-.pytest_cache/
-.nox/
-.tox/
-test-results/
-junit.xml
+.prof
 
 # Type Checking
 .dmypy.json
@@ -115,63 +136,58 @@ dmypy.json
 # Ruff / Formatting
 .ruff_cache/
 
-# Local Development Data
+# Local Databases
 *.sqlite
 *.sqlite3
 *.db
+*.db-journal
 
 # Local Save Data
-# Keep the game's save directory structure,
-# but do not commit personal save progress.
+# Ignore personal game saves but preserve the save directory.
 data/saves/*.json
-
-# Allow a placeholder file to keep the directory in Git
 !data/saves/.gitkeep
 
 # Local Statistics Data
-# Uncomment if statistics should remain local.
+# Keep data/statistics.json tracked unless statistics
+# are intended to remain local.
 # data/statistics.json
 
-# Generated Documentation / Export Files
+# Generated Documentation
 docs/_build/
 docs/build/
-docs/_static/
+site/
+
+# Generated Reports / Exports
 *.pdf
+*.html
+!docs/**/*.html
 
 # Generated Archives
 *.zip
 *.tar
 *.tar.gz
+*.tgz
 *.rar
 *.7z
 
-# OS / File Manager Metadata
-.Trashes/
-.Spotlight-V100/
-.fseventsd/
-.AppleDouble
-.LSOverride
+# Package Manager / Tool Caches
+.cache/
+.pybuild/
+pip-wheel-metadata/
 
-# Windows Explorer
-$RECYCLE.BIN/
-*.lnk
+# Test Artifacts
+nosetests.xml
+coverage/
+.pytest_cache/
 
-# macOS / Linux temporary files
-*.swp
-*.swo
-
-# VS Code local history
-.history/
-
-# Project-specific temporary directories
+# Project-Specific Temporary Directories
 temp/
 tmp/
-.cache/
+logs/
+output/
+outputs/
 
-# Secrets / Credentials
-*.pem
-*.key
-*.crt
-credentials.json
-secrets.json 
+# Local Configuration
+*.local
+*.local.*
 
